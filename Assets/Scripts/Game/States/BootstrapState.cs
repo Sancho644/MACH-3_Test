@@ -1,6 +1,7 @@
 using Core.Services;
 using Data;
 using Scenes;
+using UI.Popups.MainMenu.Services;
 using UnityEngine;
 
 namespace Game.States
@@ -39,6 +40,7 @@ namespace Game.States
         {
             AllServices.Register<ISceneLoaderService>(new SceneLoaderService(_coroutineRunner));
             AllServices.Register<IPlayerDataService>(new PlayerDataService());
+            AllServices.Register<IMainMenuPopupService>(new MainMenuPopupService(AllServices.Get<ISceneLoaderService>()));
         }
     }
 }

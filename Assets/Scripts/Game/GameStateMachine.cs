@@ -15,7 +15,7 @@ namespace Game
             _states = new Dictionary<Type, IExitableState>()
             {
                 [typeof(BootstrapState)] = new BootstrapState(this, coroutineRunner),
-                [typeof(LoadProgressState)] = new LoadProgressState(this)
+                [typeof(LoadProgressState)] = new LoadProgressState()
             };
         }
 

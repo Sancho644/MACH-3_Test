@@ -1,23 +1,19 @@
 using Core.Services;
 using Data;
+using Scenes;
 using UnityEngine;
 
 namespace Game.States
 {
     public class LoadProgressState : IState
     {
-        private readonly GameStateMachine _gameStateMachine;
-
-        public LoadProgressState(GameStateMachine gameStateMachine)
-        {
-            _gameStateMachine = gameStateMachine;
-        }
+        private const SceneName ProgressLoadingScene = SceneName.MainMenu;
 
         public void Enter()
         {
             LoadProgressOrInitNew();
 
-            //_gameStateMachine.Enter<>();
+            AllServices.Get<ISceneLoaderService>().Load(ProgressLoadingScene, () => {});
         }
 
         public void Exit()
