@@ -1,11 +1,10 @@
 ﻿using System.Threading.Tasks;
 using Core.AssetManagement;
 using GameEvents;
-using JetBrains.Annotations;
 using StaticData;
 using UI.Services.Windows;
+using UI.Windows.Gameplay;
 using UI.Windows.MainMenu;
-using UI.Windows.MainMenu.Services;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -21,7 +20,7 @@ namespace UI.Services.Factory
 
         private Transform _uiRoot;
 
-        public UIFactoryService(IAssets assets, [CanBeNull] IStaticDataService staticDataService,
+        public UIFactoryService(IAssets assets, IStaticDataService staticDataService,
             IGameEventsDispatcher gameEventsDispatcher)
         {
             _assets = assets;
@@ -31,7 +30,7 @@ namespace UI.Services.Factory
 
         public void CreateMainMenu()
         {
-            var windowConfig = _staticDataService.ForWindow(WindowType.MainMenu);
+            var windowConfig = _staticDataService.GetWindowConfig(WindowType.MainMenu);
             var mainMenuWindow = Object.Instantiate(windowConfig.Prefab, _uiRoot) as MainMenuWindow;
             if (mainMenuWindow != null)
             {
@@ -41,8 +40,12 @@ namespace UI.Services.Factory
 
         public void CreateGamePlayWindow()
         {
-            var windowConfig = _staticDataService.ForWindow(WindowType.Gameplay);
-            Object.Instantiate(windowConfig.Prefab, _uiRoot);
+            var windowConfig = _staticDataService.GetWindowConfig(WindowType.Gameplay);
+            var gameplayWindow = Object.Instantiate(windowConfig.Prefab, _uiRoot) as GameplayWindow;
+            if (gameplayWindow != null)
+            {
+                gameplayWindow.Init(_staticDataService);
+            }
         }
 
         public async Task CreateGameCanvas()
