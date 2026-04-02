@@ -1,7 +1,12 @@
+using Core.AssetManagement;
 using Core.Services;
 using Data;
+using GameEvents;
 using Scenes;
-using UI.Popups.MainMenu.Services;
+using StaticData;
+using UI.Services.Factory;
+using UI.Services.Windows;
+using UI.Windows.MainMenu.Services;
 using UnityEngine;
 
 namespace Game.States
@@ -38,9 +43,37 @@ namespace Game.States
 
         private void RegisterServices()
         {
+            RegisterAssetProvider();
+            RegisterStaticData();
+
             AllServices.Register<ISceneLoaderService>(new SceneLoaderService(_coroutineRunner));
             AllServices.Register<IPlayerDataService>(new PlayerDataService());
-            AllServices.Register<IMainMenuPopupService>(new MainMenuPopupService(AllServices.Get<ISceneLoaderService>()));
+            AllServices.Register<IGameEventsDispatcher>(new GameEventsDispatcher());
+            AllServices.Register<IUIFactoryService>(new UIFactoryService(
+                AllServices.Get<IAssets>(),
+                AllServices.Get<IStaticDataService>(),
+                AllServices.Get<IGameEventsDispatcher>()));
+            AllServices.Register<IWindowService>(new WindowService(
+                AllServices.Get<IUIFactoryService>()));
+            AllServices.Register<IMainMenuWindowService>(new MainMenuWindowService(
+                AllServices.Get<ISceneLoaderService>(),
+                AllServices.Get<IWindowService>(),
+                AllServices.Get<IUIFactoryService>(),
+                AllServices.Get<IGameEventsDispatcher>()));
+        }
+
+        private void RegisterAssetProvider()
+        {
+            AssetsProvider assetProvider = new AssetsProvider();
+            assetProvider.Instantiate();
+            AllServices.Register<IAssets>(assetProvider);
+        }
+
+        private void RegisterStaticData()
+        {
+            IStaticDataService staticData = new StaticDataService();
+            staticData.Initialize();
+            AllServices.Register(staticData);
         }
     }
 }

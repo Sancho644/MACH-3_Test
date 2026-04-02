@@ -1,6 +1,9 @@
+using System.Threading.Tasks;
 using Core.Services;
 using Data;
 using Scenes;
+using UI.Services.Factory;
+using UI.Services.Windows;
 using UnityEngine;
 
 namespace Game.States
@@ -9,11 +12,18 @@ namespace Game.States
     {
         private const SceneName ProgressLoadingScene = SceneName.MainMenu;
 
+        private IWindowService _windowService;
+        private IUIFactoryService _iuiFactoryServiceService;
+
         public void Enter()
         {
+            Debug.Log("Enter LoadProgress state");
+            
             LoadProgressOrInitNew();
 
-            AllServices.Get<ISceneLoaderService>().Load(ProgressLoadingScene, () => {});
+            _windowService = AllServices.Get<IWindowService>();
+            _iuiFactoryServiceService = AllServices.Get<IUIFactoryService>();
+            AllServices.Get<ISceneLoaderService>().Load(ProgressLoadingScene, OnLoadComplete);
         }
 
         public void Exit()
@@ -33,5 +43,14 @@ namespace Game.States
                 playerDataService.LoadDefaultPlayerData();
             }
         }
+
+        private async void OnLoadComplete()
+        {
+            await CreateGameCanvas();
+            _windowService.Open(WindowType.MainMenu);
+        }
+
+        private async Task CreateGameCanvas() =>
+            await _iuiFactoryServiceService.CreateGameCanvas();
     }
 }
