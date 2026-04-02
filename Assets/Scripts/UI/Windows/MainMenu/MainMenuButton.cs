@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI.Popups.MainMenu
+namespace UI.Windows.MainMenu
 {
     [RequireComponent(typeof(Button))]
     public class MainMenuButton : MonoBehaviour

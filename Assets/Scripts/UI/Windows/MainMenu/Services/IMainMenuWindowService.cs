@@ -1,6 +1,6 @@
 ﻿namespace UI.Windows.MainMenu.Services
 {
-    public interface IMainMenuPopupService
+    public interface IMainMenuWindowService
     {
         public void DoMainMenuAction(MainMenuButtonType buttonType);
     }

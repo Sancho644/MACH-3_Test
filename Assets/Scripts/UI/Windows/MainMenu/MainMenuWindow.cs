@@ -1,20 +1,20 @@
 ﻿using System.Collections.Generic;
-using Core.Services;
-using UI.Popups.MainMenu.Services;
+using GameEvents;
+using UI.Windows.MainMenu.GameEvents;
 using UnityEngine;
 
-namespace UI.Popups.MainMenu
+namespace UI.Windows.MainMenu
 {
-    public class MainMenuPopup : MonoBehaviour
+    public class MainMenuWindow : AbstractWindow
     {
         [SerializeField] private List<MainMenuButton> buttons;
-        
-        private IMainMenuPopupService _mainMenuService;
 
-        private void Awake()
+        private IGameEventsDispatcher _gameEventsDispatcher;
+
+        public void Init(IGameEventsDispatcher gameEventsDispatcher)
         {
-            _mainMenuService = AllServices.Get<IMainMenuPopupService>();
-            
+            _gameEventsDispatcher = gameEventsDispatcher;
+
             foreach (var button in buttons)
             {
                 button.OnClick += OnButtonClick;
@@ -31,7 +31,7 @@ namespace UI.Popups.MainMenu
 
         private void OnButtonClick(MainMenuButtonType buttonType)
         {
-            _mainMenuService.DoMainMenuAction(buttonType);
+            _gameEventsDispatcher.Dispatch(new MainMenuActionEvent(buttonType));
         }
     }
 }

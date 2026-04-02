@@ -1,4 +1,4 @@
-﻿namespace UI.Popups.MainMenu
+﻿namespace UI.Windows.MainMenu
 {
     public enum MainMenuButtonType
     {

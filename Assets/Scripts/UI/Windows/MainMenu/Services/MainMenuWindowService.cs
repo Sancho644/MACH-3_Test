@@ -8,7 +8,7 @@ using UI.Windows.MainMenu.GameEvents;
 
 namespace UI.Windows.MainMenu.Services
 {
-    public class MainMenuWindowService : IMainMenuPopupService, IDisposable
+    public class MainMenuWindowService : IMainMenuWindowService, IDisposable
     {
         private readonly IWindowService _windowService;
         private readonly ISceneLoaderService _sceneLoaderService;
