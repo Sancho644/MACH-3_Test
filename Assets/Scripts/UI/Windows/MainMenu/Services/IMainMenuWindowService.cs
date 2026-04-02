@@ -1,4 +1,4 @@
-﻿namespace UI.Popups.MainMenu.Services
+﻿namespace UI.Windows.MainMenu.Services
 {
     public interface IMainMenuPopupService
     {

@@ -1,11 +1,13 @@
 ﻿using Scenes;
+using UI.Services.Factory;
+using UI.Services.Windows;
 using UnityEngine;
 
-namespace UI.Popups.MainMenu.Services
+namespace UI.Windows.MainMenu.Services
 {
     public class ExitActionStrategy : AbstractMainMenuActionStrategy
     {
-        public ExitActionStrategy(ISceneLoaderService sceneLoaderService) : base(sceneLoaderService)
+        public ExitActionStrategy(ISceneLoaderService sceneLoaderService, IWindowService windowService, IUIFactoryService uiFactoryService) : base(sceneLoaderService, windowService, uiFactoryService)
         {
         }
 
