@@ -1,6 +1,7 @@
 using Core.AssetManagement;
 using Core.Services;
 using Data;
+using Data.Services;
 using GameEvents;
 using Scenes;
 using StaticData;
@@ -47,12 +48,14 @@ namespace Game.States
             RegisterStaticData();
 
             AllServices.Register<ISceneLoaderService>(new SceneLoaderService(_coroutineRunner));
-            AllServices.Register<IPlayerDataService>(new PlayerDataService());
+            AllServices.Register<IPlayerDataService>(new PlayerDataService(AllServices.Get<IStaticDataService>()));
+            AllServices.Register<IPlayerStatsService>(new PlayerStatsService(AllServices.Get<IPlayerDataService>()));
             AllServices.Register<IGameEventsDispatcher>(new GameEventsDispatcher());
             AllServices.Register<IUIFactoryService>(new UIFactoryService(
                 AllServices.Get<IAssets>(),
                 AllServices.Get<IStaticDataService>(),
-                AllServices.Get<IGameEventsDispatcher>()));
+                AllServices.Get<IGameEventsDispatcher>(),
+                AllServices.Get<IPlayerStatsService>()));
             AllServices.Register<IWindowService>(new WindowService(
                 AllServices.Get<IUIFactoryService>()));
             AllServices.Register<IMainMenuWindowService>(new MainMenuWindowService(

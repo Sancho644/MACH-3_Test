@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Core.Services;
-using Data;
+using Data.Services;
 using Scenes;
 using UI.Services.Factory;
 using UI.Services.Windows;
@@ -18,7 +18,7 @@ namespace Game.States
         public void Enter()
         {
             Debug.Log("Enter LoadProgress state");
-            
+
             LoadProgressOrInitNew();
 
             _windowService = AllServices.Get<IWindowService>();
@@ -34,14 +34,7 @@ namespace Game.States
         private void LoadProgressOrInitNew()
         {
             var playerDataService = AllServices.Get<IPlayerDataService>();
-            if (playerDataService.HasPlayerData)
-            {
-                playerDataService.LoadPlayerData();
-            }
-            else
-            {
-                playerDataService.LoadDefaultPlayerData();
-            }
+            playerDataService.LoadDefaultPlayerData();
         }
 
         private async void OnLoadComplete()
