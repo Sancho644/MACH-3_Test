@@ -19,6 +19,7 @@ namespace UI.Animations
             _sequence?.Kill(true);
             
             _sequence = DOTween.Sequence();
+            _sequence.SetLink(gameObject, LinkBehaviour.KillOnDestroy);
             var targetScale = transform.localScale * scaleMultiplier;
             
             _sequence.Append(transform.DOScale(targetScale, duration).SetEase(ease));
@@ -31,7 +32,9 @@ namespace UI.Animations
         public Tween GetTween()
         {
             var targetScale = transform.localScale * scaleMultiplier;
-            return transform.DOScale(targetScale, duration).SetEase(ease);
+            return transform.DOScale(targetScale, duration)
+                .SetEase(ease)
+                .SetLink(gameObject, LinkBehaviour.KillOnDestroy);
         }
         
         private void OnDestroy()

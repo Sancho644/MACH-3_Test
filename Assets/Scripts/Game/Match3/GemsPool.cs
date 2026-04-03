@@ -30,6 +30,7 @@ namespace Game.Match3
             if (view == null)
                 return;
 
+            view.ResetVisuals();
             view.SetGem(null);
             view.gameObject.SetActive(false);
             view.transform.SetParent(poolRoot, false);

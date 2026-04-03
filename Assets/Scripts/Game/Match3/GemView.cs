@@ -59,5 +59,15 @@ namespace Game.Match3
                 _image.color = color;
             }
         }
+
+        private void OnDisable()
+        {
+            transform.DOKill();
+        }
+
+        private void OnDestroy()
+        {
+            transform.DOKill();
+        }
     }
 }
