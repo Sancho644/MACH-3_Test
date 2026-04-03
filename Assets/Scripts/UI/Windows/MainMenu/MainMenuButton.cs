@@ -7,10 +7,10 @@ namespace UI.Windows.MainMenu
     [RequireComponent(typeof(Button))]
     public class MainMenuButton : MonoBehaviour
     {
-        [SerializeField] private MainMenuButtonType mainMenuButtonType;
+        [SerializeField] private GameActionType gameActionType;
         [SerializeField] private Button button;
 
-        public event Action<MainMenuButtonType> OnClick;
+        public event Action<GameActionType> OnClick;
 
         private void Awake()
         {
@@ -24,7 +24,7 @@ namespace UI.Windows.MainMenu
 
         private void OnButtonClick()
         {
-            OnClick?.Invoke(mainMenuButtonType);
+            OnClick?.Invoke(gameActionType);
         }
     }
 }

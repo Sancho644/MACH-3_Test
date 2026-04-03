@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using Game.Services.GameEvents;
 using GameEvents;
-using UI.Windows.MainMenu.GameEvents;
 using UnityEngine;
 
 namespace UI.Windows.MainMenu
@@ -8,7 +8,7 @@ namespace UI.Windows.MainMenu
     public class MainMenuWindow : AbstractWindow
     {
         [SerializeField] private List<MainMenuButton> buttons;
-
+        
         private IGameEventsDispatcher _gameEventsDispatcher;
 
         public void Init(IGameEventsDispatcher gameEventsDispatcher)
@@ -29,9 +29,9 @@ namespace UI.Windows.MainMenu
             }
         }
 
-        private void OnButtonClick(MainMenuButtonType buttonType)
+        private void OnButtonClick(GameActionType actionType)
         {
-            _gameEventsDispatcher.Dispatch(new MainMenuActionEvent(buttonType));
+            _gameEventsDispatcher.Dispatch(new GameActionEvent(actionType));
         }
     }
 }
