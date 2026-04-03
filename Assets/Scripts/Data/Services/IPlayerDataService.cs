@@ -1,4 +1,4 @@
-﻿namespace Data
+﻿namespace Data.Services
 {
     public interface IPlayerDataService
     {
