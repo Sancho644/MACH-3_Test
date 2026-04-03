@@ -130,6 +130,10 @@ namespace Game.Match3
             }
 
             _isBusy = false;
+            if (_movesRemaining <= 0)
+            {
+                _gameEventsDispatcher.Dispatch(new OutOfMovesEvent());
+            }
         }
 
         private void InitializeBoardView()
