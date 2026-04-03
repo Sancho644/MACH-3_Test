@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Data.Services;
 using DG.Tweening;
+using Game.Match3.GameEvents;
+using GameEvents;
 using StaticData;
 using UnityEngine;
 
@@ -12,35 +15,36 @@ namespace Game.Match3
         [SerializeField] private BoardView boardView;
         [SerializeField] private int spawnYOffset = 2;
 
+        private IGameEventsDispatcher _gameEventsDispatcher;
+        private IPlayerStatsService _playerStatsService;
         private IStaticDataService _staticDataService;
         private BoardStaticData _staticData;
 
         private readonly MoveValidator _moveValidator = new();
         private readonly BoardResolver _resolver = new();
-        
+
         private BoardModel _model;
         private Vector2Int? _selectedCell;
         private bool _isBusy;
         private int _movesRemaining;
-        private int _score;
 
         public bool IsBusy => _isBusy;
         public bool HasMoves => _movesRemaining > 0;
-        public int MovesRemaining => _movesRemaining;
-        public int Score => _score;
 
-        public void Initialize(IStaticDataService staticDataService)
+        public void Initialize(IStaticDataService staticDataService, IPlayerStatsService playerStatsService,
+            IGameEventsDispatcher gameEventsDispatcher)
         {
             _staticDataService = staticDataService;
+            _playerStatsService = playerStatsService;
+            _gameEventsDispatcher = gameEventsDispatcher;
             _staticData = _staticDataService.GetBoardConfig();
 
-            if (_staticData == null || boardView == null)
+            if (_staticData == null || boardView == null || _playerStatsService == null)
                 return;
 
             _model = new BoardModel(_staticData.Width, _staticData.Height, _staticData.GemTypesCount);
             _model.InitializeNoMatches();
-            _movesRemaining = _staticData.InitialMoves;
-            _score = 0;
+            _movesRemaining = _playerStatsService.Moves;
 
             InitializeBoardView();
         }
@@ -157,15 +161,19 @@ namespace Game.Match3
 
         private void SpendMove(int amount)
         {
-            _movesRemaining = Mathf.Max(0, _movesRemaining - amount);
+            _playerStatsService.SpendMoves(amount);
+            _movesRemaining = _playerStatsService.Moves;
+            _gameEventsDispatcher.Dispatch(new PlayerStatsChangedEvent());
+            
             Debug.Log($"Moves remaining: {_movesRemaining}");
         }
 
         private void AddMoves(int amount)
         {
-            if (amount <= 0)
-                return;
-            _movesRemaining += amount;
+            _playerStatsService.AddMoves(amount);
+            _movesRemaining = _playerStatsService.Moves;
+            _gameEventsDispatcher.Dispatch(new PlayerStatsChangedEvent());
+            
             Debug.Log($"Moves remaining: {_movesRemaining}");
         }
 
@@ -174,10 +182,12 @@ namespace Game.Match3
             if (matchCount < 3 || _staticData == null)
                 return;
 
-            var added = _staticData.Match3Score + (matchCount - 3) * _staticData.ScoreStep;
-            _score += added;
+            var added = _staticData.Match3Score + (matchCount - 3) * _playerStatsService.Score;
+
+            _playerStatsService.AddScore(added);
+            _gameEventsDispatcher.Dispatch(new PlayerStatsChangedEvent());
+            
             Debug.Log($"Match count: {matchCount}, score added: {added}");
-            Debug.Log($"Score: {_score}");
         }
 
         private int GetMovesForMatch(int matchCount)
