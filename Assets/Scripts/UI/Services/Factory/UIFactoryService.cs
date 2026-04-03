@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Core.AssetManagement;
+using Data.Services;
 using GameEvents;
 using StaticData;
 using UI.Services.Windows;
@@ -16,16 +17,18 @@ namespace UI.Services.Factory
 
         private readonly IAssets _assets;
         private readonly IStaticDataService _staticDataService;
+        private readonly IPlayerStatsService _playerStatsService;
         private readonly IGameEventsDispatcher _gameEventsDispatcher;
 
         private Transform _uiRoot;
 
         public UIFactoryService(IAssets assets, IStaticDataService staticDataService,
-            IGameEventsDispatcher gameEventsDispatcher)
+            IGameEventsDispatcher gameEventsDispatcher, IPlayerStatsService  playerStatsService)
         {
             _assets = assets;
             _staticDataService = staticDataService;
             _gameEventsDispatcher = gameEventsDispatcher;
+            _playerStatsService = playerStatsService;
         }
 
         public void CreateMainMenu()
@@ -44,7 +47,7 @@ namespace UI.Services.Factory
             var gameplayWindow = Object.Instantiate(windowConfig.Prefab, _uiRoot) as GameplayWindow;
             if (gameplayWindow != null)
             {
-                gameplayWindow.Init(_staticDataService);
+                gameplayWindow.Init(_staticDataService,  _playerStatsService, _gameEventsDispatcher);
             }
         }
 
