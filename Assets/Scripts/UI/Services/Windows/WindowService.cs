@@ -1,13 +1,11 @@
 ﻿using System;
 using UI.Services.Factory;
-using UI.Windows.MainMenu.Services;
 
 namespace UI.Services.Windows
 {
     public class WindowService : IWindowService
     {
         private readonly IUIFactoryService _iuiFactoryService;
-        private readonly IMainMenuWindowService _mainMenuWindowService;
 
         public WindowService(IUIFactoryService iuiFactoryService)
         {

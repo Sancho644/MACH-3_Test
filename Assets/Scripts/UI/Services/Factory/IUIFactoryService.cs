@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using UI.Windows.MainMenu;
 
 namespace UI.Services.Factory
 {
@@ -8,5 +7,7 @@ namespace UI.Services.Factory
         public void CreateMainMenu();
         public void CreateGamePlayWindow();
         public Task CreateGameCanvas();
+        public void CreateLowScoreWindow();
+        public void CreateShowMainMenuWindow();
     }
 }
