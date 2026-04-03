@@ -13,7 +13,7 @@ namespace Game.States
         private const SceneName ProgressLoadingScene = SceneName.MainMenu;
 
         private IWindowService _windowService;
-        private IUIFactoryService _iuiFactoryServiceService;
+        private IUIFactoryService _iuiFactoryService;
 
         public void Enter()
         {
@@ -22,7 +22,7 @@ namespace Game.States
             LoadProgressOrInitNew();
 
             _windowService = AllServices.Get<IWindowService>();
-            _iuiFactoryServiceService = AllServices.Get<IUIFactoryService>();
+            _iuiFactoryService = AllServices.Get<IUIFactoryService>();
             AllServices.Get<ISceneLoaderService>().Load(ProgressLoadingScene, OnLoadComplete);
         }
 
@@ -44,6 +44,6 @@ namespace Game.States
         }
 
         private async Task CreateGameCanvas() =>
-            await _iuiFactoryServiceService.CreateGameCanvas();
+            await _iuiFactoryService.CreateGameCanvas();
     }
 }

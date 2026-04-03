@@ -1,13 +1,12 @@
 using Core.AssetManagement;
 using Core.Services;
-using Data;
 using Data.Services;
+using Game.Services;
 using GameEvents;
 using Scenes;
 using StaticData;
 using UI.Services.Factory;
 using UI.Services.Windows;
-using UI.Windows.MainMenu.Services;
 using UnityEngine;
 
 namespace Game.States
@@ -56,13 +55,13 @@ namespace Game.States
                 AllServices.Get<IStaticDataService>(),
                 AllServices.Get<IGameEventsDispatcher>(),
                 AllServices.Get<IPlayerStatsService>()));
-            AllServices.Register<IWindowService>(new WindowService(
-                AllServices.Get<IUIFactoryService>()));
-            AllServices.Register<IMainMenuWindowService>(new MainMenuWindowService(
+            AllServices.Register<IWindowService>(new WindowService(AllServices.Get<IUIFactoryService>()));
+            AllServices.Register<IGameActionService>(new GameActionService(
                 AllServices.Get<ISceneLoaderService>(),
                 AllServices.Get<IWindowService>(),
                 AllServices.Get<IUIFactoryService>(),
-                AllServices.Get<IGameEventsDispatcher>()));
+                AllServices.Get<IGameEventsDispatcher>(),
+                AllServices.Get<IPlayerStatsService>()));
         }
 
         private void RegisterAssetProvider()

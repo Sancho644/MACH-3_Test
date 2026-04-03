@@ -7,5 +7,6 @@ namespace Data.Services
         public void AddScore(int amount);
         public void AddMoves(int amount);
         public void SpendMoves(int amount);
+        public void LoadDefaultData();
     }
 }

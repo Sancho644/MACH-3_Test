@@ -36,6 +36,11 @@ namespace Data.Services
             SetMoves(movesMax);
         }
 
+        public void LoadDefaultData()
+        {
+            _playerDataService.LoadDefaultPlayerData();
+        }
+
         private void SetMoves(int amount)
         {
             _playerDataService.Data.Moves = amount;
