@@ -1,4 +1,5 @@
-﻿using Game.Services.GameEvents;
+﻿using Game.Match3.GameEvents;
+using Game.Services.GameEvents;
 using GameEvents;
 using UI.Windows.MainMenu;
 using UnityEngine;
@@ -13,9 +14,10 @@ namespace UI.Windows.ShowMainMenu
 
         private IGameEventsDispatcher _gameEventsDispatcher;
 
-        public void Initialize(IGameEventsDispatcher gameEventsDispatcher)
+        public void Init(IGameEventsDispatcher gameEventsDispatcher)
         {
             _gameEventsDispatcher = gameEventsDispatcher;
+            _gameEventsDispatcher.Dispatch(new PauseInputEvent(true));
 
             goMenuButton.onClick.AddListener(OnGoMenu);
             stayButton.onClick.AddListener(OnStay);
@@ -23,6 +25,8 @@ namespace UI.Windows.ShowMainMenu
 
         private void OnDestroy()
         {
+            _gameEventsDispatcher.Dispatch(new PauseInputEvent(false));
+
             goMenuButton.onClick.RemoveListener(OnGoMenu);
             stayButton.onClick.RemoveListener(OnStay);
         }

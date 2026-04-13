@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Core.AssetManagement;
+using Core.Records;
 using Data.Services;
 using GameEvents;
 using StaticData;
@@ -7,6 +8,7 @@ using UI.Services.Windows;
 using UI.Windows.Gameplay;
 using UI.Windows.LowScore;
 using UI.Windows.MainMenu;
+using UI.Windows.Records;
 using UI.Windows.ShowMainMenu;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -18,6 +20,7 @@ namespace UI.Services.Factory
         private const string GameCanvasPath = "GameCanvas";
 
         private readonly IAssets _assets;
+        private readonly IRecordsService _recordsService;
         private readonly IStaticDataService _staticDataService;
         private readonly IPlayerStatsService _playerStatsService;
         private readonly IGameEventsDispatcher _gameEventsDispatcher;
@@ -25,15 +28,17 @@ namespace UI.Services.Factory
         private Transform _uiRoot;
 
         public UIFactoryService(IAssets assets, IStaticDataService staticDataService,
-            IGameEventsDispatcher gameEventsDispatcher, IPlayerStatsService playerStatsService)
+            IGameEventsDispatcher gameEventsDispatcher, IPlayerStatsService playerStatsService,
+            IRecordsService recordsService)
         {
             _assets = assets;
             _staticDataService = staticDataService;
             _gameEventsDispatcher = gameEventsDispatcher;
             _playerStatsService = playerStatsService;
+            _recordsService = recordsService;
         }
 
-        public void CreateMainMenu()
+        public void CreateMainMenuWindow()
         {
             var windowConfig = _staticDataService.GetWindowConfig(WindowType.MainMenu);
             var mainMenuWindow = Object.Instantiate(windowConfig.Prefab, _uiRoot) as MainMenuWindow;
@@ -49,7 +54,8 @@ namespace UI.Services.Factory
             var gameplayWindow = Object.Instantiate(windowConfig.Prefab, _uiRoot) as GameplayWindow;
             if (gameplayWindow != null)
             {
-                gameplayWindow.Init(_staticDataService, _playerStatsService, _gameEventsDispatcher, this);
+                gameplayWindow.Init(_staticDataService, _playerStatsService, _gameEventsDispatcher, this,
+                    _recordsService);
             }
         }
 
@@ -69,7 +75,17 @@ namespace UI.Services.Factory
             var showMainMenuWindow = Object.Instantiate(windowConfig.Prefab, _uiRoot) as ShowMainMenuWindow;
             if (showMainMenuWindow != null)
             {
-                showMainMenuWindow.Initialize(_gameEventsDispatcher);
+                showMainMenuWindow.Init(_gameEventsDispatcher);
+            }
+        }
+
+        public void CreateRecordsWindow()
+        {
+            var windowConfig = _staticDataService.GetWindowConfig(WindowType.Records);
+            var recordsWindow = Object.Instantiate(windowConfig.Prefab, _uiRoot) as RecordsWindow;
+            if (recordsWindow != null)
+            {
+                recordsWindow.Init(_recordsService, _gameEventsDispatcher);
             }
         }
 
