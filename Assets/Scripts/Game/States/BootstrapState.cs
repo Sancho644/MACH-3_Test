@@ -1,4 +1,5 @@
 using Core.AssetManagement;
+using Core.Records;
 using Core.Services;
 using Data.Services;
 using Game.Services;
@@ -47,6 +48,7 @@ namespace Game.States
             RegisterStaticData();
 
             AllServices.Register<ISceneLoaderService>(new SceneLoaderService(_coroutineRunner));
+            AllServices.Register<IRecordsService>(new RecordsService(AllServices.Get<IStaticDataService>()));
             AllServices.Register<IPlayerDataService>(new PlayerDataService(AllServices.Get<IStaticDataService>()));
             AllServices.Register<IPlayerStatsService>(new PlayerStatsService(AllServices.Get<IPlayerDataService>()));
             AllServices.Register<IGameEventsDispatcher>(new GameEventsDispatcher());
@@ -54,7 +56,8 @@ namespace Game.States
                 AllServices.Get<IAssets>(),
                 AllServices.Get<IStaticDataService>(),
                 AllServices.Get<IGameEventsDispatcher>(),
-                AllServices.Get<IPlayerStatsService>()));
+                AllServices.Get<IPlayerStatsService>(), 
+                AllServices.Get<IRecordsService>()));
             AllServices.Register<IWindowService>(new WindowService(AllServices.Get<IUIFactoryService>()));
             AllServices.Register<IGameActionService>(new GameActionService(
                 AllServices.Get<ISceneLoaderService>(),

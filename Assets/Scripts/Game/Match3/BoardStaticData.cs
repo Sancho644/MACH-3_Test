@@ -22,6 +22,8 @@ namespace Game.Match3
         [Min(0)] public int Match3Moves = 2;
         [Tooltip("Количество ходов которые выдаются за каждое последеющее совподение гемов больше 3х")]
         [Min(0)] public int MoveStep = 1;
+        [Tooltip("Максимальное количество строчек в окне рекордов")]
+        [Min(0)] public int MaxRecords = 10;
 
         [Min(0.1f)] public float CellSize = 1f;
         [Min(0.1f)] public float CellVisualSize = 1f;
