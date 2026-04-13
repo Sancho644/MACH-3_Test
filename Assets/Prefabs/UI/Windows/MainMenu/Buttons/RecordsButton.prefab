@@ -100,6 +100,10 @@ PrefabInstance:
       value: RECORDS
       objectReference: {fileID: 0}
     - target: {fileID: 4472957946936240222, guid: 6e7a4e93c182a4544b86c6a47066ed93, type: 3}
+      propertyPath: gameActionType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4472957946936240222, guid: 6e7a4e93c182a4544b86c6a47066ed93, type: 3}
       propertyPath: mainMenuButtonType
       value: 1
       objectReference: {fileID: 0}
