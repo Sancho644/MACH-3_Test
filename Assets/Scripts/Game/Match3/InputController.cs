@@ -1,4 +1,6 @@
 using DG.Tweening;
+using Game.Match3.GameEvents;
+using GameEvents;
 using UnityEngine;
 
 namespace Game.Match3
@@ -17,9 +19,8 @@ namespace Game.Match3
         [SerializeField] private BoardView boardView;
         [SerializeField] private BoardController boardController;
 
-        [Header("Animations")] [SerializeField]
-        private float dragStartThreshold = 0.2f;
-
+        [Header("Animations")] 
+        [SerializeField] private float dragStartThreshold = 0.2f;
         [SerializeField] private float dragFollowSpeed = 25f;
         [SerializeField] private float swapAnimationDuration = 0.2f;
         [SerializeField] private float snapBackDuration = 0.12f;
@@ -28,15 +29,27 @@ namespace Game.Match3
 
         private Vector2Int? _pressedCell;
         private Vector3 _pressWorld;
+        private Vector3 _dragOffset;
+        private DragAxis _dragAxis = DragAxis.None;
         private GemView _dragView;
         private bool _isDragging;
         private bool _isSnapping;
-        private Vector3 _dragOffset;
-        private DragAxis _dragAxis = DragAxis.None;
+        private bool _initialized;
+        private bool _pause;
         private int _dragOriginalSiblingIndex = -1;
         private RectTransform _boardRect;
         private Canvas _boardCanvas;
         private Camera _uiCamera;
+
+        private IGameEventsDispatcher _gameEventsDispatcher;
+
+        public void Initialize(IGameEventsDispatcher gameEventsDispatcher)
+        {
+            _gameEventsDispatcher = gameEventsDispatcher;
+            _gameEventsDispatcher.AddListener<PauseInputEvent>(OnPauseInput);
+
+            _initialized = true;
+        }
 
         private void Awake()
         {
@@ -65,6 +78,12 @@ namespace Game.Match3
 
         private void Update()
         {
+            if (!_initialized)
+                return;
+
+            if (_pause)
+                return;
+
             if (worldCamera == null || boardView == null || boardController == null)
                 return;
 
@@ -98,6 +117,11 @@ namespace Game.Match3
                 _dragAxis = DragAxis.None;
                 _dragOriginalSiblingIndex = -1;
             }
+        }
+
+        private void OnDestroy()
+        {
+            _gameEventsDispatcher.RemoveListener<PauseInputEvent>(OnPauseInput);
         }
 
         private void TrySwapGems(Vector2Int first, Vector3 world)
@@ -196,6 +220,11 @@ namespace Game.Match3
                 view.transform.SetAsLastSibling();
                 view.transform.DOKill();
             }
+        }
+
+        private void OnPauseInput(PauseInputEvent @event)
+        {
+            _pause = @event.Pause;
         }
 
         private Vector2Int GetAdjacentCellFromDrag(Vector2Int origin, Vector3 delta)

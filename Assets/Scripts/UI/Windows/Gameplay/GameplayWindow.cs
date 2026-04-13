@@ -1,4 +1,5 @@
-﻿using Data.Services;
+﻿using Core.Records;
+using Data.Services;
 using Game.Match3;
 using Game.Match3.GameEvents;
 using GameEvents;
@@ -15,21 +16,23 @@ namespace UI.Windows.Gameplay
         [SerializeField] private BoardController boardController;
         [SerializeField] private CountersController countersController;
         [SerializeField] private ShowMainMenuButton showMainMenuButton;
+        [SerializeField] private InputController inputController;
 
         private IGameEventsDispatcher _gameEventsDispatcher;
         private IUIFactoryService _uiFactoryService;
 
         public void Init(IStaticDataService staticDataService, IPlayerStatsService playerStatsService,
-            IGameEventsDispatcher gameEventsDispatcher, IUIFactoryService uiFactoryService)
+            IGameEventsDispatcher gameEventsDispatcher, IUIFactoryService uiFactoryService, IRecordsService recordsService)
         {
             _uiFactoryService = uiFactoryService;
             _gameEventsDispatcher = gameEventsDispatcher;
 
             _gameEventsDispatcher.AddListener<OutOfMovesEvent>(OnOutOfMoves);
 
-            boardController.Initialize(staticDataService, playerStatsService, gameEventsDispatcher);
+            boardController.Initialize(staticDataService, playerStatsService, gameEventsDispatcher, recordsService);
             countersController.Initialize(gameEventsDispatcher, playerStatsService);
             showMainMenuButton.Initialize(uiFactoryService);
+            inputController.Initialize(gameEventsDispatcher);
         }
 
         private void OnDestroy()

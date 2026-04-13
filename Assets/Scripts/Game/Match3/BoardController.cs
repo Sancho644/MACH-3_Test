@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Core.Records;
 using Data.Services;
 using DG.Tweening;
 using Game.Match3.GameEvents;
+using Game.Services.GameEvents;
 using GameEvents;
 using StaticData;
+using UI.Windows.MainMenu;
 using UnityEngine;
 
 namespace Game.Match3
@@ -18,13 +21,13 @@ namespace Game.Match3
         private IGameEventsDispatcher _gameEventsDispatcher;
         private IPlayerStatsService _playerStatsService;
         private IStaticDataService _staticDataService;
+        private IRecordsService _recordsService;
         private BoardStaticData _staticData;
 
         private readonly MoveValidator _moveValidator = new();
         private readonly BoardResolver _resolver = new();
 
         private BoardModel _model;
-        private Vector2Int? _selectedCell;
         private bool _isBusy;
         private int _movesRemaining;
 
@@ -32,11 +35,13 @@ namespace Game.Match3
         public bool HasMoves => _movesRemaining > 0;
 
         public void Initialize(IStaticDataService staticDataService, IPlayerStatsService playerStatsService,
-            IGameEventsDispatcher gameEventsDispatcher)
+            IGameEventsDispatcher gameEventsDispatcher, IRecordsService recordsService)
         {
             _staticDataService = staticDataService;
             _playerStatsService = playerStatsService;
             _gameEventsDispatcher = gameEventsDispatcher;
+            _recordsService = recordsService;
+
             _staticData = _staticDataService.GetBoardConfig();
 
             if (_staticData == null || boardView == null || _playerStatsService == null)
@@ -84,7 +89,9 @@ namespace Game.Match3
 
             SpendMove(1);
             _isBusy = true;
+
             StartCoroutine(ExplodeCellRoutine(cell));
+
             return true;
         }
 
@@ -96,11 +103,11 @@ namespace Game.Match3
                 if (groups.Count == 0)
                     break;
 
-                HashSet<Vector2Int> allMatches = new HashSet<Vector2Int>();
+                var allMatches = new HashSet<Vector2Int>();
                 int rewardMoves = 0;
                 for (int i = 0; i < groups.Count; i++)
                 {
-                    HashSet<Vector2Int> group = groups[i];
+                    var group = groups[i];
                     if (group.Count >= 3)
                     {
                         int movesAdded = GetMovesForMatch(group.Count);
@@ -130,7 +137,23 @@ namespace Game.Match3
             }
 
             _isBusy = false;
-            if (_movesRemaining <= 0)
+            CheckRecordsStatus();
+        }
+
+        private void CheckRecordsStatus()
+        {
+            if (_movesRemaining > 0)
+            {
+                return;
+            }
+            
+            var isRecordScore = _recordsService.TryAddRecord(_playerStatsService.Score);
+            if (_movesRemaining <= 0 && isRecordScore)
+            {
+                _gameEventsDispatcher.Dispatch(new GameActionEvent(GameActionType.Records));
+            }
+
+            if (_movesRemaining <= 0 && !isRecordScore)
             {
                 _gameEventsDispatcher.Dispatch(new OutOfMovesEvent());
             }
@@ -168,7 +191,7 @@ namespace Game.Match3
             _playerStatsService.SpendMoves(amount);
             _movesRemaining = _playerStatsService.Moves;
             _gameEventsDispatcher.Dispatch(new PlayerStatsChangedEvent());
-            
+
             Debug.Log($"Moves remaining: {_movesRemaining}");
         }
 
@@ -177,7 +200,7 @@ namespace Game.Match3
             _playerStatsService.AddMoves(amount);
             _movesRemaining = _playerStatsService.Moves;
             _gameEventsDispatcher.Dispatch(new PlayerStatsChangedEvent());
-            
+
             Debug.Log($"Moves remaining: {_movesRemaining}");
         }
 
@@ -190,7 +213,7 @@ namespace Game.Match3
 
             _playerStatsService.AddScore(added);
             _gameEventsDispatcher.Dispatch(new PlayerStatsChangedEvent());
-            
+
             Debug.Log($"Match count: {matchCount}, score added: {added}");
         }
 
