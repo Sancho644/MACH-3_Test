@@ -24,7 +24,7 @@ namespace Core.Records
         {
             _staticDataService = staticDataService;
             _recordsCsvParser = new RecordsCsvParser();
-            
+
             _sourcePath = ResolveSourcePath(fileName);
             _persistentPath = Path.Combine(Application.persistentDataPath, fileName);
             _records = new List<RecordEntry>();
@@ -36,6 +36,10 @@ namespace Core.Records
         {
             if (score <= 0)
                 return false;
+
+            var maxRecords = _staticDataService.GetBoardConfig().MaxRecords;
+            if (_records.Count <= 0 || _records.Count < maxRecords)
+                return true;
 
             return _records[^1].Score < score;
         }
@@ -101,7 +105,7 @@ namespace Core.Records
         private List<RecordEntry> Normalize(IEnumerable<RecordEntry> records)
         {
             var maxRecords = _staticDataService.GetBoardConfig().MaxRecords;
-            
+
             return records
                 .OrderByDescending(record => record.Score)
                 .ThenByDescending(record => record.Date)

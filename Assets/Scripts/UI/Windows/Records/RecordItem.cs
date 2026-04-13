@@ -16,8 +16,8 @@ namespace UI.Windows.Records
             points.text = entry.Score.ToString();
             if (entry.NewRecord)
             {
-                date.fontSize = newRecordFontSize;
-                points.fontSize = newRecordFontSize;
+                date.fontSizeMax = newRecordFontSize;
+                points.fontSizeMax = newRecordFontSize;
             }
         }
     }

@@ -48,7 +48,7 @@ namespace UI.Services.Factory
             }
         }
 
-        public void CreateGamePlayWindow()
+        public void CreateGameplayWindow()
         {
             var windowConfig = _staticDataService.GetWindowConfig(WindowType.Gameplay);
             var gameplayWindow = Object.Instantiate(windowConfig.Prefab, _uiRoot) as GameplayWindow;

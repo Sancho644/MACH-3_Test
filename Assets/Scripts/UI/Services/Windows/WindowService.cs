@@ -20,7 +20,7 @@ namespace UI.Services.Windows
                     _iuiFactoryService.CreateMainMenuWindow();
                     break;
                 case WindowType.Gameplay:
-                    _iuiFactoryService.CreateGamePlayWindow();
+                    _iuiFactoryService.CreateGameplayWindow();
                     break;
                 case WindowType.Records:
                     _iuiFactoryService.CreateRecordsWindow();

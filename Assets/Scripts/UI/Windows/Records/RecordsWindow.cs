@@ -24,7 +24,11 @@ namespace UI.Windows.Records
         private void Refresh()
         {
             var records = _recordsService.Records;
-
+            foreach (Transform child in recordsRoot.transform)
+            {
+                Destroy(child.gameObject);
+            }
+            
             foreach (var entry in records)
             {
                 var recordItem = Instantiate(recordItemPrefab, recordsRoot);
