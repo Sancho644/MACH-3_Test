@@ -20,6 +20,7 @@ MonoBehaviour:
   ScoreStep: 100
   Match3Moves: 2
   MoveStep: 1
+  MaxRecords: 10
   CellSize: 80
   CellVisualSize: 110
   GemSpacing: {x: 30, y: 23}
