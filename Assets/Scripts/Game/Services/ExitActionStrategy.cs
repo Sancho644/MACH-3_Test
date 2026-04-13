@@ -7,16 +7,14 @@ namespace Game.Services
 {
     public class ExitActionStrategy : AbstractGameActionStrategy
     {
-        public ExitActionStrategy(ISceneLoaderService sceneLoaderService, IWindowService windowService, IUIFactoryService uiFactoryService) : base(sceneLoaderService, windowService, uiFactoryService)
+        public ExitActionStrategy(ISceneLoaderService sceneLoaderService, IWindowService windowService,
+            IUIFactoryService uiFactoryService) : base(sceneLoaderService, windowService, uiFactoryService)
         {
         }
 
         public override void Execute()
         {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#endif
-            Application.Quit();
+            WindowService.Open(WindowType.ConfirmExit);
         }
     }
 }

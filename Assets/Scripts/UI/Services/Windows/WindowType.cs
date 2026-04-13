@@ -6,6 +6,7 @@ namespace UI.Services.Windows
         Gameplay = 1,
         LowScore = 2,
         ShowMainMenu = 3,
-        Records = 4
+        Records = 4,
+        ConfirmExit = 5
     }
 }

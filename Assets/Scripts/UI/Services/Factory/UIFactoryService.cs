@@ -5,6 +5,7 @@ using Data.Services;
 using GameEvents;
 using StaticData;
 using UI.Services.Windows;
+using UI.Windows.ConfirmExit;
 using UI.Windows.Gameplay;
 using UI.Windows.LowScore;
 using UI.Windows.MainMenu;
@@ -87,6 +88,12 @@ namespace UI.Services.Factory
             {
                 recordsWindow.Init(_recordsService, _gameEventsDispatcher);
             }
+        }
+
+        public void CreateConfirmExitWindow()
+        {
+            var windowConfig = _staticDataService.GetWindowConfig(WindowType.ConfirmExit);
+            Object.Instantiate(windowConfig.Prefab, _uiRoot);
         }
 
         public async Task CreateGameCanvas()

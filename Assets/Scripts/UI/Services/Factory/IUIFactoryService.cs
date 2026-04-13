@@ -10,5 +10,6 @@ namespace UI.Services.Factory
         public void CreateLowScoreWindow();
         public void CreateShowMainMenuWindow();
         public void CreateRecordsWindow();
+        public void CreateConfirmExitWindow();
     }
 }
