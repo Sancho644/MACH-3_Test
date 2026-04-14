@@ -1,6 +1,7 @@
 using System.IO;
 using System.Runtime.Serialization;
 using Core.Match3;
+using Core.Match3.Board;
 using StaticData;
 using UnityEngine;
 
