@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2961191753096964763}
   - component: {fileID: 904826777767384870}
   - component: {fileID: 7977476255019643437}
+  - component: {fileID: 8959049287692106595}
   m_Layer: 5
   m_Name: GemView
   m_TagString: Untagged
@@ -91,8 +92,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c383654628fad9449bce160dfa0cf4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  image: {fileID: 7430704907594138439}
   moveTween: {fileID: 904826777767384870}
   explosionTween: {fileID: 7977476255019643437}
+  hintTween: {fileID: 8959049287692106595}
 --- !u!114 &904826777767384870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,3 +126,23 @@ MonoBehaviour:
   scaleMultiplier: 1.25
   ease: 6
   image: {fileID: 7430704907594138439}
+--- !u!114 &8959049287692106595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4214788010480063805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd51c7805e890ad45980018c771b2169, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 0.45
+  scaleMultiplier: 1.12
+  moveDistance: 20
+  ease: 4
+  gemHintColor: {r: 1, g: 1, b: 1, a: 0.8}
+  cellHintColor: {r: 1, g: 0.92, b: 0.45, a: 1}
+  image: {fileID: 7430704907594138439}
+  rectTransform: {fileID: 4214788010480063802}
