@@ -1,3 +1,5 @@
+using Core.Match3.Board;
+using Core.Match3.Hint;
 using UnityEngine;
 
 namespace Core.Match3

@@ -1,12 +1,13 @@
 using System.Collections.Generic;
+using Core.Match3.Gem;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Core.Match3
+namespace Core.Match3.Board
 {
     [RequireComponent(typeof(GemsPool))]
-    public class BoardView : MonoBehaviour
+    public class BoardView : MonoBehaviour, IBoardView
     {
         [SerializeField] private GemsPool pool;
         [SerializeField] private RectTransform boardRoot;
@@ -14,21 +15,20 @@ namespace Core.Match3
 
         private GemView[,] _views;
         private BoardModel _model;
-        private Dictionary<Gem, GemView> _gemToView;
+        private Dictionary<GemData, GemView> _gemToView;
         private Vector2 _boardOriginLocal;
-        private Image[,] _cellViews;
         private BoardStaticData _staticData;
-        private GemView _hintGemView;
 
         public float GemStepX => _staticData != null ? _staticData.CellSize + _staticData.GemSpacing.x : 1f;
         public float GemStepY => _staticData != null ? _staticData.CellSize + _staticData.GemSpacing.y : 1f;
+        public Image[,] CellViews { get; private set; }
 
         public void Init(BoardModel model, BoardStaticData staticData)
         {
             _model = model;
             _staticData = staticData;
             _views = new GemView[_model.Width, _model.Height];
-            _gemToView = new Dictionary<Gem, GemView>();
+            _gemToView = new Dictionary<GemData, GemView>();
 
             if (_staticData != null)
             {
@@ -40,13 +40,11 @@ namespace Core.Match3
 
         public void SyncToModel()
         {
-            ClearHint();
             SyncToModelInternal(false, 0);
         }
 
         public Sequence SyncToModelAnimated(int spawnYOffset)
         {
-            ClearHint();
             return SyncToModelInternal(true, spawnYOffset);
         }
 
@@ -56,7 +54,7 @@ namespace Core.Match3
                 return null;
 
             if (_gemToView == null)
-                _gemToView = new Dictionary<Gem, GemView>();
+                _gemToView = new Dictionary<GemData, GemView>();
 
             UpdateAliveGems();
 
@@ -134,6 +132,19 @@ namespace Core.Match3
                 return false;
 
             view = _views[cell.x, cell.y];
+            return view != null;
+        }
+
+        public bool GetCellView(Vector2Int cell, out Image view)
+        {
+            view = null;
+            if (CellViews == null)
+            {
+                return false;
+            }
+
+            view = CellViews[cell.x, cell.y];
+            
             return view != null;
         }
 
@@ -251,10 +262,10 @@ namespace Core.Match3
 
         public void BuildCells()
         {
-            if (_model == null || _staticData == null || _staticData.CellPrefab == null || _cellViews != null)
+            if (_model == null || _staticData == null || _staticData.CellPrefab == null || CellViews != null)
                 return;
 
-            _cellViews = new Image[_model.Width, _model.Height];
+            CellViews = new Image[_model.Width, _model.Height];
             if (cellsRoot == null)
             {
                 var root = new GameObject("CellsRoot", typeof(RectTransform));
@@ -274,39 +285,9 @@ namespace Core.Match3
                     var rect = cell.rectTransform;
                     rect.sizeDelta = new Vector2(_staticData.CellVisualSize, _staticData.CellVisualSize);
                     rect.position = CellToCellWorld(x, y);
-                    _cellViews[x, y] = cell;
+                    CellViews[x, y] = cell;
                 }
             }
-        }
-
-        public bool ShowHint(Vector2Int from, Vector2Int to)
-        {
-            ClearHint();
-
-            if (!TryGetView(from, out var gemView))
-                return false;
-            if (_cellViews == null || !_model.IsInside(to.x, to.y))
-                return false;
-
-            var cellView = _cellViews[to.x, to.y];
-            if (cellView == null)
-                return false;
-
-            _hintGemView = gemView;
-
-            var hintDirection = (Vector2)(to - from);
-
-            gemView.GetHintTween(hintDirection, cellView);
-
-            return true;
-        }
-
-        public void ClearHint()
-        {
-            if (_hintGemView != null)
-                _hintGemView.ResetVisuals();
-
-            _hintGemView = null;
         }
 
         private Vector3 CellToWorld(int x, int y)
@@ -333,7 +314,7 @@ namespace Core.Match3
 
         private void UpdateAliveGems()
         {
-            var alive = new HashSet<Gem>();
+            var alive = new HashSet<GemData>();
             for (var x = 0; x < _model.Width; x++)
             {
                 for (var y = 0; y < _model.Height; y++)
@@ -346,7 +327,7 @@ namespace Core.Match3
 
             if (_gemToView.Count > 0)
             {
-                var toRemove = new List<Gem>();
+                var toRemove = new List<GemData>();
                 foreach (var pair in _gemToView)
                 {
                     if (alive.Contains(pair.Key))
@@ -367,11 +348,11 @@ namespace Core.Match3
             }
         }
 
-        private void SetupGem(GemView view, Gem gem)
+        private void SetupGem(GemView view, GemData gemData)
         {
             view.ResetVisuals();
-            view.SetGem(gem);
-            var spriteIndex = Mathf.Clamp((int)gem.Type, 0, _staticData.GemSprites.Length - 1);
+            view.SetGem(gemData);
+            var spriteIndex = Mathf.Clamp((int)gemData.Type, 0, _staticData.GemSprites.Length - 1);
             view.SetSprite(_staticData.GemSprites[spriteIndex]);
         }
 

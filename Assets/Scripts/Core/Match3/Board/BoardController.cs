@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Core.Match3.GameEvents;
+using Core.Match3.Hint;
 using Core.Records;
 using Data.Services;
 using DG.Tweening;
@@ -10,10 +11,10 @@ using StaticData;
 using UI.Windows.MainMenu;
 using UnityEngine;
 
-namespace Core.Match3
+namespace Core.Match3.Board
 {
     [RequireComponent(typeof(BoardView))]
-    public class BoardController : MonoBehaviour
+    public class BoardController : MonoBehaviour, IBoardState
     {
         [SerializeField] private BoardView boardView;
         [SerializeField] private int spawnYOffset = 2;
@@ -27,11 +28,10 @@ namespace Core.Match3
         private readonly MoveValidator _moveValidator = new();
         private readonly BoardResolver _resolver = new();
 
-        private BoardModel _model;
-        private bool _isBusy;
         private int _movesRemaining;
 
-        public bool IsBusy => _isBusy;
+        public BoardModel Model { get; private set; }
+        public bool IsBusy { get; private set; }
         public bool HasMoves => _movesRemaining > 0;
 
         public void Initialize(IStaticDataService staticDataService, IPlayerStatsService playerStatsService,
@@ -47,32 +47,31 @@ namespace Core.Match3
             if (_staticData == null || boardView == null || _playerStatsService == null)
                 return;
 
-            _model = new BoardModel(_staticData.Width, _staticData.Height, _staticData.GemTypesCount);
-            _model.InitializeNoMatches();
+            Model = new BoardModel(_staticData.Width, _staticData.Height, _staticData.GemTypesCount);
+            Model.InitializeNoMatches();
             _movesRemaining = _playerStatsService.Moves;
 
             InitializeBoardView();
-            ShowHint();
         }
 
         public bool TrySwapAnimated(Vector2Int first, Vector2Int second, float duration, Ease ease)
         {
-            if (_model == null || boardView == null || _isBusy || !HasMoves)
+            if (Model == null || boardView == null || IsBusy || !HasMoves)
                 return false;
 
-            if (!_model.IsInside(first.x, first.y) || !_model.IsInside(second.x, second.y))
+            if (!Model.IsInside(first.x, first.y) || !Model.IsInside(second.x, second.y))
                 return false;
 
             if (!_moveValidator.IsAdjacent(first, second))
                 return false;
 
-            if (!_moveValidator.HasMatchAfterSwap(_model, first, second))
+            if (!_moveValidator.HasMatchAfterSwap(Model, first, second))
                 return false;
 
             SpendMove(1);
-            _model.Swap(first.x, first.y, second.x, second.y);
+            Model.Swap(first.x, first.y, second.x, second.y);
             boardView.SwapViews(first, second);
-            _isBusy = true;
+            IsBusy = true;
 
             boardView.AnimateSwap(first, second, duration, ease, () => { StartCoroutine(ResolveCascadesAnimated()); });
 
@@ -81,55 +80,43 @@ namespace Core.Match3
 
         public bool TryExplodeCell(Vector2Int cell)
         {
-            if (_model == null || boardView == null || _isBusy || !HasMoves)
+            if (Model == null || boardView == null || IsBusy || !HasMoves)
                 return false;
-            if (!_model.IsInside(cell.x, cell.y))
+            if (!Model.IsInside(cell.x, cell.y))
                 return false;
-            if (_model.Gems[cell.x, cell.y] == null)
+            if (Model.Gems[cell.x, cell.y] == null)
                 return false;
 
             SpendMove(1);
-            _isBusy = true;
+            IsBusy = true;
 
             StartCoroutine(ExplodeCellRoutine(cell));
 
             return true;
         }
 
-        public void ClearHint()
-        {
-            if (boardView == null)
-                return;
-
-            boardView.ClearHint();
-        }
-
-        private bool TryGetHint(out MoveHint hint)
+        public bool TryFindBestMatchMove(out MoveHint hint)
         {
             hint = default;
-
-            if (_model == null || _isBusy || !HasMoves)
+            
+            if (Model == null)
+            {
                 return false;
-
-            return _moveValidator.TryFindBestMatchMove(_model, out hint);
+            }
+           
+            return _moveValidator.TryFindBestMatchMove(Model, out hint);
         }
 
-        private bool ShowHint()
+        public bool IsInside(int x, int y)
         {
-            if (boardView == null)
-                return false;
-
-            if (!TryGetHint(out var hint))
-                return false;
-
-            return boardView.ShowHint(hint.From, hint.To);
+            return Model.IsInside(x, y);
         }
 
         private IEnumerator ResolveCascadesAnimated()
         {
             while (true)
             {
-                List<HashSet<Vector2Int>> groups = _resolver.FindMatchGroups(_model);
+                List<HashSet<Vector2Int>> groups = _resolver.FindMatchGroups(Model);
                 if (groups.Count == 0)
                     break;
 
@@ -155,9 +142,9 @@ namespace Core.Match3
                 if (explosion != null)
                     yield return explosion.WaitForCompletion();
 
-                _resolver.RemoveMatches(_model, allMatches);
-                _resolver.Collapse(_model);
-                _resolver.Refill(_model);
+                _resolver.RemoveMatches(Model, allMatches);
+                _resolver.Collapse(Model);
+                _resolver.Refill(Model);
 
                 var fall = boardView.SyncToModelAnimated(spawnYOffset);
                 if (fall != null)
@@ -166,7 +153,7 @@ namespace Core.Match3
                     yield return null;
             }
 
-            _isBusy = false;
+            IsBusy = false;
             CheckRecordsStatus();
         }
 
@@ -176,7 +163,7 @@ namespace Core.Match3
             {
                 return;
             }
-            
+
             var isRecordScore = _recordsService.TryAddRecord(_playerStatsService.Score);
             if (_movesRemaining <= 0 && isRecordScore)
             {
@@ -191,7 +178,7 @@ namespace Core.Match3
 
         private void InitializeBoardView()
         {
-            boardView.Init(_model, _staticData);
+            boardView.Init(Model, _staticData);
             boardView.BuildCells();
             boardView.SyncToModel();
         }
@@ -203,9 +190,9 @@ namespace Core.Match3
             if (explosion != null)
                 yield return explosion.WaitForCompletion();
 
-            _resolver.RemoveMatches(_model, single);
-            _resolver.Collapse(_model);
-            _resolver.Refill(_model);
+            _resolver.RemoveMatches(Model, single);
+            _resolver.Collapse(Model);
+            _resolver.Refill(Model);
 
             var fall = boardView.SyncToModelAnimated(spawnYOffset);
             if (fall != null)
@@ -220,7 +207,6 @@ namespace Core.Match3
         {
             _playerStatsService.SpendMoves(amount);
             _movesRemaining = _playerStatsService.Moves;
-            _gameEventsDispatcher.Dispatch(new PlayerStatsChangedEvent());
 
             Debug.Log($"Moves remaining: {_movesRemaining}");
         }
@@ -229,7 +215,6 @@ namespace Core.Match3
         {
             _playerStatsService.AddMoves(amount);
             _movesRemaining = _playerStatsService.Moves;
-            _gameEventsDispatcher.Dispatch(new PlayerStatsChangedEvent());
 
             Debug.Log($"Moves remaining: {_movesRemaining}");
         }
@@ -242,7 +227,6 @@ namespace Core.Match3
             var added = _staticData.Match3Score + (matchCount - 3) * _playerStatsService.Score;
 
             _playerStatsService.AddScore(added);
-            _gameEventsDispatcher.Dispatch(new PlayerStatsChangedEvent());
 
             Debug.Log($"Match count: {matchCount}, score added: {added}");
         }

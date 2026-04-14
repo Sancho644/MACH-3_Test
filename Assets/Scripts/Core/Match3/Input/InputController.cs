@@ -1,4 +1,6 @@
+using Core.Match3.Board;
 using Core.Match3.GameEvents;
+using Core.Match3.Gem;
 using DG.Tweening;
 using GameEvents;
 using UnityEngine;
@@ -19,8 +21,9 @@ namespace Core.Match3
         [SerializeField] private BoardView boardView;
         [SerializeField] private BoardController boardController;
 
-        [Header("Animations")] 
-        [SerializeField] private float dragStartThreshold = 0.2f;
+        [Header("Animations")] [SerializeField]
+        private float dragStartThreshold = 0.2f;
+
         [SerializeField] private float dragFollowSpeed = 25f;
         [SerializeField] private float swapAnimationDuration = 0.2f;
         [SerializeField] private float snapBackDuration = 0.12f;
@@ -128,16 +131,19 @@ namespace Core.Match3
         {
             if (!_isDragging)
             {
-                boardController.ClearHint();
-                boardController.TryExplodeCell(first);
+                if (boardController.TryExplodeCell(first))
+                {
+                    _gameEventsDispatcher.Dispatch(new StartInputEvent());
+                }
             }
             else
             {
-                boardController.ClearHint();
                 var second = GetAdjacentCellFromDrag(first, world - _pressWorld);
                 if (!boardView.IsInside(second) ||
                     !boardController.TrySwapAnimated(first, second, swapAnimationDuration, swapAnimationEase))
                 {
+                    _gameEventsDispatcher.Dispatch(new StartInputEvent());
+
                     if (boardView.IsInside(second) && boardView.TryGetView(second, out GemView otherView))
                     {
                         var snapView = _dragView;
@@ -208,8 +214,6 @@ namespace Core.Match3
                 return;
             if (!TryGetPointerWorld(out Vector3 world))
                 return;
-
-            boardController.ClearHint();
 
             var cell = boardView.WorldToCell(world);
             if (boardView.IsInside(cell) && boardView.TryGetView(cell, out GemView view))

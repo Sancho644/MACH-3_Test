@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Core.Match3
+namespace Core.Match3.Hint
 {
     public readonly struct MoveHint
     {

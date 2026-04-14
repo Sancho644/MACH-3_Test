@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using Core.Match3.Gem;
 using UnityEngine;
 
-namespace Core.Match3
+namespace Core.Match3.Board
 {
     public class BoardResolver
     {
@@ -114,7 +115,7 @@ namespace Core.Match3
                         continue;
 
                     var type = (GemType)Random.Range(0, model.TypesCount);
-                    model.Gems[x, y] = new Gem(type, x, y);
+                    model.Gems[x, y] = new GemData(type, x, y);
                 }
             }
         }

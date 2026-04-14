@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using Core.Match3.Gem;
 using UnityEngine;
 
-namespace Core.Match3
+namespace Core.Match3.Board
 {
     public class BoardModel
     {
@@ -9,14 +10,14 @@ namespace Core.Match3
         public int Height { get; }
         public int TypesCount { get; }
 
-        public Gem[,] Gems { get; }
+        public GemData[,] Gems { get; }
 
         public BoardModel(int width, int height, int typesCount)
         {
             Width = width;
             Height = height;
             TypesCount = typesCount;
-            Gems = new Gem[width, height];
+            Gems = new GemData[width, height];
         }
 
         public void InitializeNoMatches()
@@ -26,7 +27,7 @@ namespace Core.Match3
                 for (var y = 0; y < Height; y++)
                 {
                     var type = GetRandomTypeAvoidingInitialMatch(x, y);
-                    Gems[x, y] = new Gem(type, x, y);
+                    Gems[x, y] = new GemData(type, x, y);
                 }
             }
         }

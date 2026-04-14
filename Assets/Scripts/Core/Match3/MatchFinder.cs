@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Core.Match3.Board;
+using Core.Match3.Gem;
 using UnityEngine;
 
 namespace Core.Match3
