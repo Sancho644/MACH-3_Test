@@ -1,32 +1,40 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Core.Match3;
+using System.Threading.Tasks;
+using Core.AssetManagement;
+using Core.Match3.Board;
 using StaticData.Windows;
 using UI.Services.Windows;
-using UnityEngine;
 
 namespace StaticData
 {
     public class StaticDataService : IStaticDataService
     {
-        private const string StaticDataWindowsPath = "StaticData/UI/WindowsStaticData";
-        private const string StaticDataBoardPath = "StaticData/UI/BoardStaticData";
+        private const string StaticDataWindowsPath = "WindowsStaticData";
+        private const string StaticDataBoardPath = "BoardStaticData";
 
         private Dictionary<WindowType, WindowConfig> _windowConfigs;
         private BoardStaticData _boardConfigs;
+        
+        private readonly IAssets _assets;
 
-        public void Initialize()
+        public StaticDataService(IAssets assets)
         {
-            _windowConfigs = Resources
-                .Load<WindowsStaticData>(StaticDataWindowsPath)
-                .Configs
-                .ToDictionary(x => x.WindowType, x => x);
+            _assets = assets;
+        }
+        
+        public async Task Initialize()
+        {
+            var windowsStaticData = await _assets.Load<WindowsStaticData>(StaticDataWindowsPath);
+            _windowConfigs = windowsStaticData.Configs.ToDictionary(x => x.WindowType, x => x);
 
-            _boardConfigs = Resources.Load<BoardStaticData>(StaticDataBoardPath);
+            _boardConfigs = await _assets.Load<BoardStaticData>(StaticDataBoardPath);
         }
 
-        public WindowConfig GetWindowConfig(WindowType windowType) =>
-            _windowConfigs.TryGetValue(windowType, out WindowConfig windowConfig) ? windowConfig : null;
+        public WindowConfig GetWindowConfig(WindowType windowType)
+        {
+            return _windowConfigs.GetValueOrDefault(windowType);
+        }
 
         public BoardStaticData GetBoardConfig() => _boardConfigs;
     }

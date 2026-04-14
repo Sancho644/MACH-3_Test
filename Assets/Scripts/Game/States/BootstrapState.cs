@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Core.AssetManagement;
 using Core.Records;
 using Core.Services;
@@ -24,13 +25,13 @@ namespace Game.States
             _gameStateMachine = gameStateMachine;
             _coroutineRunner = coroutineRunner;
 
-            RegisterServices();
+            RegisterCoreServices();
         }
 
         public void Enter()
         {
             Debug.Log("Enter Bootstrap state");
-            AllServices.Get<ISceneLoaderService>().Load(BootstrapLoadingScene, EnterLoadProgress);
+            EnterAsync();
         }
 
         public void Exit()
@@ -42,16 +43,28 @@ namespace Game.States
             _gameStateMachine.Enter<LoadProgressState>();
         }
 
-        private void RegisterServices()
+        private async void EnterAsync()
+        {
+            await RegisterStaticData();
+            RegisterDependentServices();
+            AllServices.Get<ISceneLoaderService>().Load(BootstrapLoadingScene, EnterLoadProgress);
+        }
+
+        private void RegisterCoreServices()
         {
             RegisterAssetProvider();
-            RegisterStaticData();
 
             AllServices.Register<ISceneLoaderService>(new SceneLoaderService(_coroutineRunner));
+            AllServices.Register<IGameEventsDispatcher>(new GameEventsDispatcher());
+        }
+
+        private void RegisterDependentServices()
+        {
             AllServices.Register<IRecordsService>(new RecordsService(AllServices.Get<IStaticDataService>()));
             AllServices.Register<IPlayerDataService>(new PlayerDataService(AllServices.Get<IStaticDataService>()));
-            AllServices.Register<IPlayerStatsService>(new PlayerStatsService(AllServices.Get<IPlayerDataService>()));
-            AllServices.Register<IGameEventsDispatcher>(new GameEventsDispatcher());
+            AllServices.Register<IPlayerStatsService>(new PlayerStatsService(
+                AllServices.Get<IPlayerDataService>(), 
+                AllServices.Get<IGameEventsDispatcher>()));
             AllServices.Register<IUIFactoryService>(new UIFactoryService(
                 AllServices.Get<IAssets>(),
                 AllServices.Get<IStaticDataService>(),
@@ -74,10 +87,10 @@ namespace Game.States
             AllServices.Register<IAssets>(assetProvider);
         }
 
-        private void RegisterStaticData()
+        private async Task RegisterStaticData()
         {
-            IStaticDataService staticData = new StaticDataService();
-            staticData.Initialize();
+            IStaticDataService staticData = new StaticDataService(AllServices.Get<IAssets>());
+            await staticData.Initialize();
             AllServices.Register(staticData);
         }
     }
