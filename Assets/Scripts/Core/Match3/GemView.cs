@@ -3,7 +3,7 @@ using UI.Animations;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.Match3
+namespace Core.Match3
 {
     [RequireComponent(typeof(MoveTween), typeof(ExplosionTween), typeof(HintTween))]
     [RequireComponent(typeof(Image))]

@@ -1,16 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using Core.Match3.GameEvents;
 using Core.Records;
 using Data.Services;
 using DG.Tweening;
-using Game.Match3.GameEvents;
 using Game.Services.GameEvents;
 using GameEvents;
 using StaticData;
 using UI.Windows.MainMenu;
 using UnityEngine;
 
-namespace Game.Match3
+namespace Core.Match3
 {
     [RequireComponent(typeof(BoardView))]
     public class BoardController : MonoBehaviour

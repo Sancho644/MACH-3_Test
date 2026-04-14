@@ -1,9 +1,9 @@
+using Core.Match3.GameEvents;
 using DG.Tweening;
-using Game.Match3.GameEvents;
 using GameEvents;
 using UnityEngine;
 
-namespace Game.Match3
+namespace Core.Match3
 {
     [RequireComponent(typeof(BoardController), typeof(BoardView))]
     public class InputController : MonoBehaviour

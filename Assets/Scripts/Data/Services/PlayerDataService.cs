@@ -1,6 +1,6 @@
 using System.IO;
 using System.Runtime.Serialization;
-using Game.Match3;
+using Core.Match3;
 using StaticData;
 using UnityEngine;
 

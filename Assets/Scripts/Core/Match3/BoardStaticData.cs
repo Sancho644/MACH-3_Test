@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.Match3
+namespace Core.Match3
 {
     [CreateAssetMenu(fileName = "BoardStaticData", menuName = "StaticData/BoardStaticData")]
     public class BoardStaticData : ScriptableObject

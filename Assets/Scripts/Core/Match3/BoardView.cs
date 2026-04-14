@@ -3,7 +3,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.Match3
+namespace Core.Match3
 {
     [RequireComponent(typeof(GemsPool))]
     public class BoardView : MonoBehaviour

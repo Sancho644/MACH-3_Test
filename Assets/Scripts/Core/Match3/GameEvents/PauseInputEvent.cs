@@ -1,6 +1,6 @@
 ﻿using GameEvents;
 
-namespace Game.Match3.GameEvents
+namespace Core.Match3.GameEvents
 {
     public class PauseInputEvent : IGameEvent
     {

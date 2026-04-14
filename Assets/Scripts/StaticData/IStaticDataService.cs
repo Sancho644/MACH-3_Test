@@ -1,4 +1,4 @@
-using Game.Match3;
+using Core.Match3;
 using StaticData.Windows;
 using UI.Services.Windows;
 

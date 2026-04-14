@@ -1,5 +1,5 @@
-﻿using Data.Services;
-using Game.Match3.GameEvents;
+﻿using Core.Match3.GameEvents;
+using Data.Services;
 using GameEvents;
 using TMPro;
 using UnityEngine;

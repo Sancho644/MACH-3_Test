@@ -1,7 +1,7 @@
-﻿using Core.Records;
+﻿using Core.Match3;
+using Core.Match3.GameEvents;
+using Core.Records;
 using Data.Services;
-using Game.Match3;
-using Game.Match3.GameEvents;
 using GameEvents;
 using StaticData;
 using UI.Services.Factory;

@@ -1,4 +1,4 @@
-﻿using Game.Match3.GameEvents;
+﻿using Core.Match3.GameEvents;
 using Game.Services.GameEvents;
 using GameEvents;
 using UI.Windows.MainMenu;

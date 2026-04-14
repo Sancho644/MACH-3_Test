@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game.Match3
+namespace Core.Match3
 {
     public class MoveValidator
     {
