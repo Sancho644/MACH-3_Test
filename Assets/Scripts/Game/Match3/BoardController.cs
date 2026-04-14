@@ -52,6 +52,7 @@ namespace Game.Match3
             _movesRemaining = _playerStatsService.Moves;
 
             InitializeBoardView();
+            ShowHint();
         }
 
         public bool TrySwapAnimated(Vector2Int first, Vector2Int second, float duration, Ease ease)
@@ -95,6 +96,35 @@ namespace Game.Match3
             return true;
         }
 
+        public void ClearHint()
+        {
+            if (boardView == null)
+                return;
+
+            boardView.ClearHint();
+        }
+
+        private bool TryGetHint(out MoveHint hint)
+        {
+            hint = default;
+
+            if (_model == null || _isBusy || !HasMoves)
+                return false;
+
+            return _moveValidator.TryFindBestMatchMove(_model, out hint);
+        }
+
+        private bool ShowHint()
+        {
+            if (boardView == null)
+                return false;
+
+            if (!TryGetHint(out var hint))
+                return false;
+
+            return boardView.ShowHint(hint.From, hint.To);
+        }
+
         private IEnumerator ResolveCascadesAnimated()
         {
             while (true)
@@ -104,8 +134,8 @@ namespace Game.Match3
                     break;
 
                 var allMatches = new HashSet<Vector2Int>();
-                int rewardMoves = 0;
-                for (int i = 0; i < groups.Count; i++)
+                var rewardMoves = 0;
+                for (var i = 0; i < groups.Count; i++)
                 {
                     var group = groups[i];
                     if (group.Count >= 3)

@@ -128,10 +128,12 @@ namespace Game.Match3
         {
             if (!_isDragging)
             {
+                boardController.ClearHint();
                 boardController.TryExplodeCell(first);
             }
             else
             {
+                boardController.ClearHint();
                 var second = GetAdjacentCellFromDrag(first, world - _pressWorld);
                 if (!boardView.IsInside(second) ||
                     !boardController.TrySwapAnimated(first, second, swapAnimationDuration, swapAnimationEase))
@@ -206,6 +208,8 @@ namespace Game.Match3
                 return;
             if (!TryGetPointerWorld(out Vector3 world))
                 return;
+
+            boardController.ClearHint();
 
             var cell = boardView.WorldToCell(world);
             if (boardView.IsInside(cell) && boardView.TryGetView(cell, out GemView view))

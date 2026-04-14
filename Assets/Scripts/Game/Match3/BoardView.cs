@@ -18,6 +18,7 @@ namespace Game.Match3
         private Vector2 _boardOriginLocal;
         private Image[,] _cellViews;
         private BoardStaticData _staticData;
+        private GemView _hintGemView;
 
         public float GemStepX => _staticData != null ? _staticData.CellSize + _staticData.GemSpacing.x : 1f;
         public float GemStepY => _staticData != null ? _staticData.CellSize + _staticData.GemSpacing.y : 1f;
@@ -39,11 +40,13 @@ namespace Game.Match3
 
         public void SyncToModel()
         {
+            ClearHint();
             SyncToModelInternal(false, 0);
         }
 
         public Sequence SyncToModelAnimated(int spawnYOffset)
         {
+            ClearHint();
             return SyncToModelInternal(true, spawnYOffset);
         }
 
@@ -276,6 +279,36 @@ namespace Game.Match3
             }
         }
 
+        public bool ShowHint(Vector2Int from, Vector2Int to)
+        {
+            ClearHint();
+
+            if (!TryGetView(from, out var gemView))
+                return false;
+            if (_cellViews == null || !_model.IsInside(to.x, to.y))
+                return false;
+
+            var cellView = _cellViews[to.x, to.y];
+            if (cellView == null)
+                return false;
+
+            _hintGemView = gemView;
+
+            var hintDirection = (Vector2)(to - from);
+
+            gemView.GetHintTween(hintDirection, cellView);
+
+            return true;
+        }
+
+        public void ClearHint()
+        {
+            if (_hintGemView != null)
+                _hintGemView.ResetVisuals();
+
+            _hintGemView = null;
+        }
+
         private Vector3 CellToWorld(int x, int y)
         {
             var stepX = _staticData.CellSize + _staticData.GemSpacing.x;
@@ -336,6 +369,7 @@ namespace Game.Match3
 
         private void SetupGem(GemView view, Gem gem)
         {
+            view.ResetVisuals();
             view.SetGem(gem);
             var spriteIndex = Mathf.Clamp((int)gem.Type, 0, _staticData.GemSprites.Length - 1);
             view.SetSprite(_staticData.GemSprites[spriteIndex]);

@@ -5,21 +5,24 @@ using UnityEngine.UI;
 
 namespace Game.Match3
 {
-    [RequireComponent(typeof(Image), typeof(MoveTween), typeof(ExplosionTween))]
+    [RequireComponent(typeof(MoveTween), typeof(ExplosionTween), typeof(HintTween))]
+    [RequireComponent(typeof(Image))]
     public class GemView : MonoBehaviour
     {
+        [SerializeField] private Image image;
         [SerializeField] private MoveTween moveTween;
         [SerializeField] private ExplosionTween explosionTween;
+        [SerializeField] private HintTween hintTween;
 
-        private Image _image;
         private Vector3 _initialScale;
+        private Color _initialColor;
 
         public Gem Gem { get; private set; }
 
         private void Awake()
         {
-            _image = GetComponent<Image>();
             _initialScale = transform.localScale;
+            _initialColor = image.color;
         }
 
         public void SetGem(Gem gem)
@@ -29,7 +32,7 @@ namespace Game.Match3
 
         public void SetSprite(Sprite sprite)
         {
-            _image.sprite = sprite;
+            image.sprite = sprite;
         }
 
         public Tween GetMoveTween(Vector3 target)
@@ -47,17 +50,19 @@ namespace Game.Match3
             return explosionTween.GetTween();
         }
 
+        public Sequence GetHintTween(Vector2 direction, Image targetCell)
+        {
+            return hintTween.Play(direction, targetCell);
+        }
+
         public void ResetVisuals()
         {
+            hintTween.ResetState();
             transform.DOKill();
             transform.localScale = _initialScale;
 
-            if (_image != null)
-            {
-                Color color = _image.color;
-                color.a = 1f;
-                _image.color = color;
-            }
+            if (image != null)
+                image.color = _initialColor;
         }
 
         private void OnDisable()

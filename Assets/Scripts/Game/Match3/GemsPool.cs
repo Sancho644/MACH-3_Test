@@ -43,6 +43,7 @@ namespace Game.Match3
             view.transform.SetParent(poolRoot, false);
             view.gameObject.SetActive(true);
             view.ResetVisuals();
+            
             return view;
         }
 
