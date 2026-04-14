@@ -3,7 +3,7 @@ using UI.Animations;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Core.Match3
+namespace Core.Match3.Gem
 {
     [RequireComponent(typeof(MoveTween), typeof(ExplosionTween), typeof(HintTween))]
     [RequireComponent(typeof(Image))]
@@ -17,7 +17,7 @@ namespace Core.Match3
         private Vector3 _initialScale;
         private Color _initialColor;
 
-        public Gem Gem { get; private set; }
+        public GemData GemData { get; private set; }
 
         private void Awake()
         {
@@ -25,9 +25,9 @@ namespace Core.Match3
             _initialColor = image.color;
         }
 
-        public void SetGem(Gem gem)
+        public void SetGem(GemData gemData)
         {
-            Gem = gem;
+            GemData = gemData;
         }
 
         public void SetSprite(Sprite sprite)
@@ -50,9 +50,9 @@ namespace Core.Match3
             return explosionTween.GetTween();
         }
 
-        public Sequence GetHintTween(Vector2 direction, Image targetCell)
+        public Sequence GetHintTween(Vector2 direction)
         {
-            return hintTween.Play(direction, targetCell);
+            return hintTween.Play(direction);
         }
 
         public void ResetVisuals()

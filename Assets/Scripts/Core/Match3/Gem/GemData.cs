@@ -1,12 +1,12 @@
-namespace Core.Match3
+namespace Core.Match3.Gem
 {
-    public class Gem
+    public class GemData
     {
         public GemType Type { get; private set; }
         public int X { get; set; }
         public int Y { get; set; }
 
-        public Gem(GemType type, int x, int y)
+        public GemData(GemType type, int x, int y)
         {
             Type = type;
             X = x;

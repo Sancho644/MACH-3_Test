@@ -1,4 +1,4 @@
-namespace Core.Match3
+namespace Core.Match3.Gem
 {
     public enum GemType
     {

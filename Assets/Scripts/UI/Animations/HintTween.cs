@@ -11,7 +11,6 @@ namespace UI.Animations
         [SerializeField] private float moveDistance = 20f;
         [SerializeField] private Ease ease = Ease.InOutSine;
         [SerializeField] private Color gemHintColor = new(1f, 1f, 1f, 0.8f);
-        [SerializeField] private Color cellHintColor = new(1f, 0.92f, 0.45f, 1f);
         [SerializeField] private Image image;
         [SerializeField] private RectTransform rectTransform;
 
@@ -19,8 +18,6 @@ namespace UI.Animations
         private Vector3 _initialScale;
         private Vector2 _initialAnchoredPosition;
         private Color _initialGemColor;
-        private Image _targetCell;
-        private Color _initialCellColor;
         private bool _isHintActive;
 
         private void Awake()
@@ -30,16 +27,12 @@ namespace UI.Animations
                 _initialGemColor = image.color;
         }
 
-        public Sequence Play(Vector2 direction, Image targetCell)
+        public Sequence Play(Vector2 direction)
         {
             Kill();
 
             if (rectTransform != null)
                 _initialAnchoredPosition = rectTransform.anchoredPosition;
-
-            _targetCell = targetCell;
-            if (_targetCell != null)
-                _initialCellColor = _targetCell.color;
 
             if (direction.sqrMagnitude > 0.0001f)
                 direction = direction.normalized * moveDistance;
@@ -64,12 +57,6 @@ namespace UI.Animations
                     .SetEase(ease));
             }
 
-            if (_targetCell != null)
-            {
-                _sequence.Join(_targetCell.DOColor(cellHintColor, duration)
-                    .SetEase(ease));
-            }
-
             _isHintActive = true;
             return _sequence;
         }
@@ -88,10 +75,6 @@ namespace UI.Animations
                 if (image != null)
                     image.color = _initialGemColor;
 
-                if (_targetCell != null)
-                    _targetCell.color = _initialCellColor;
-
-                _targetCell = null;
                 _isHintActive = false;
             }
         }
@@ -103,7 +86,6 @@ namespace UI.Animations
 
             transform.DOKill();
             image?.DOKill();
-            _targetCell?.DOKill();
         }
 
         private void OnDisable()

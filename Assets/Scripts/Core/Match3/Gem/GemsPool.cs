@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using Core.Match3.Board;
 using UnityEngine;
 
-namespace Core.Match3
+namespace Core.Match3.Gem
 {
     public class GemsPool : MonoBehaviour
     {
