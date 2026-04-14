@@ -21,6 +21,14 @@ MonoBehaviour:
     m_Address: GameCanvas
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 05bb31e9b1011ff42a9f0c415f00e558
+    m_Address: BoardStaticData
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: f14e661a65c2eda4bbda11b5c1e4716b
+    m_Address: WindowsStaticData
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ff005030ffb9f8d43ada311a8c573868, type: 2}
   m_SchemaSet:
