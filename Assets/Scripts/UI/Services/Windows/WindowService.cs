@@ -28,6 +28,9 @@ namespace UI.Services.Windows
                 case WindowType.ConfirmExit:
                     _iuiFactoryService.CreateConfirmExitWindow();
                     break;
+                case WindowType.About:
+                    _iuiFactoryService.CreateAboutWindow();
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }

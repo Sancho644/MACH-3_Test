@@ -1,4 +1,5 @@
-﻿using Scenes;
+﻿using System.Threading.Tasks;
+using Scenes;
 using UI.Services.Factory;
 using UI.Services.Windows;
 
@@ -12,7 +13,16 @@ namespace Game.Services
 
         public override void Execute()
         {
-            SceneLoaderService.Load(SceneName.About, () => { });
+            SceneLoaderService.Load(SceneName.About, OnLoadComplete);
         }
+        
+        private async void OnLoadComplete()
+        {
+            await CreateGameCanvas();
+            WindowService.Open(WindowType.About);
+        }
+
+        private async Task CreateGameCanvas() =>
+            await UIFactoryService.CreateGameCanvas();
     }
 }

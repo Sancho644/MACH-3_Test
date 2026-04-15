@@ -5,7 +5,7 @@ using Data.Services;
 using GameEvents;
 using StaticData;
 using UI.Services.Windows;
-using UI.Windows.ConfirmExit;
+using UI.Windows.About;
 using UI.Windows.Gameplay;
 using UI.Windows.LowScore;
 using UI.Windows.MainMenu;
@@ -87,6 +87,16 @@ namespace UI.Services.Factory
             if (recordsWindow != null)
             {
                 recordsWindow.Init(_recordsService, _gameEventsDispatcher);
+            }
+        }
+
+        public void CreateAboutWindow()
+        {
+            var windowConfig = _staticDataService.GetWindowConfig(WindowType.About);
+            var aboutWindow = Object.Instantiate(windowConfig.Prefab, _uiRoot) as AboutWindow;
+            if (aboutWindow != null)
+            {
+                aboutWindow.Init(_gameEventsDispatcher);
             }
         }
 

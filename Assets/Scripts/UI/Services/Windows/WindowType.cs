@@ -7,6 +7,7 @@ namespace UI.Services.Windows
         LowScore = 2,
         ShowMainMenu = 3,
         Records = 4,
-        ConfirmExit = 5
+        ConfirmExit = 5,
+        About = 6
     }
 }

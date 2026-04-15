@@ -11,5 +11,6 @@ namespace UI.Services.Factory
         public void CreateShowMainMenuWindow();
         public void CreateRecordsWindow();
         public void CreateConfirmExitWindow();
+        public void CreateAboutWindow();
     }
 }
