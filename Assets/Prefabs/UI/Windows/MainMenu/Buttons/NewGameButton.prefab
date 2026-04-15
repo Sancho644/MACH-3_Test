@@ -95,5 +95,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: NewGameButton
       objectReference: {fileID: 0}
+    - target: {fileID: 1144178659014245215, guid: 6e7a4e93c182a4544b86c6a47066ed93, type: 3}
+      propertyPath: m_Color.b
+      value: 0.2971698
+      objectReference: {fileID: 0}
+    - target: {fileID: 1144178659014245215, guid: 6e7a4e93c182a4544b86c6a47066ed93, type: 3}
+      propertyPath: m_Color.r
+      value: 0.5700333
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e7a4e93c182a4544b86c6a47066ed93, type: 3}

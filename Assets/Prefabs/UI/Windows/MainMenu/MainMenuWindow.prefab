@@ -523,18 +523,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: AboutButton
       objectReference: {fileID: 0}
-    - target: {fileID: 1667582204869023755, guid: 8946c605088c8584380f6eb5730c8d83, type: 3}
-      propertyPath: m_Color.b
-      value: 0.9568628
-      objectReference: {fileID: 0}
-    - target: {fileID: 1667582204869023755, guid: 8946c605088c8584380f6eb5730c8d83, type: 3}
-      propertyPath: m_Color.g
-      value: 0.454902
-      objectReference: {fileID: 0}
-    - target: {fileID: 1667582204869023755, guid: 8946c605088c8584380f6eb5730c8d83, type: 3}
-      propertyPath: m_Color.r
-      value: 0.9215687
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8946c605088c8584380f6eb5730c8d83, type: 3}
 --- !u!224 &1228463240553093655 stripped
@@ -647,18 +635,6 @@ PrefabInstance:
     - target: {fileID: 9996890633965479, guid: 91f1781eebecddf44801382d9fa79343, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9996890633965482, guid: 91f1781eebecddf44801382d9fa79343, type: 3}
-      propertyPath: m_Color.b
-      value: 0.20000002
-      objectReference: {fileID: 0}
-    - target: {fileID: 9996890633965482, guid: 91f1781eebecddf44801382d9fa79343, type: 3}
-      propertyPath: m_Color.g
-      value: 0.49411768
-      objectReference: {fileID: 0}
-    - target: {fileID: 9996890633965482, guid: 91f1781eebecddf44801382d9fa79343, type: 3}
-      propertyPath: m_Color.r
-      value: 0.9921569
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 91f1781eebecddf44801382d9fa79343, type: 3}
@@ -773,18 +749,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8895179364308114442, guid: 48b0de7ff274c3d47a7a104c202b89fc, type: 3}
-      propertyPath: m_Color.b
-      value: 0.098039225
-      objectReference: {fileID: 0}
-    - target: {fileID: 8895179364308114442, guid: 48b0de7ff274c3d47a7a104c202b89fc, type: 3}
-      propertyPath: m_Color.g
-      value: 0.92549026
-      objectReference: {fileID: 0}
-    - target: {fileID: 8895179364308114442, guid: 48b0de7ff274c3d47a7a104c202b89fc, type: 3}
-      propertyPath: m_Color.r
-      value: 0.9843138
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 48b0de7ff274c3d47a7a104c202b89fc, type: 3}
 --- !u!224 &6671567110801595176 stripped
@@ -810,18 +774,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6972798031363958623}
     m_Modifications:
-    - target: {fileID: 582501151776040214, guid: 080f101632cfe744d932dfa1df6c526b, type: 3}
-      propertyPath: m_Color.b
-      value: 0.30980393
-      objectReference: {fileID: 0}
-    - target: {fileID: 582501151776040214, guid: 080f101632cfe744d932dfa1df6c526b, type: 3}
-      propertyPath: m_Color.g
-      value: 0.97647065
-      objectReference: {fileID: 0}
-    - target: {fileID: 582501151776040214, guid: 080f101632cfe744d932dfa1df6c526b, type: 3}
-      propertyPath: m_Color.r
-      value: 0.5686275
-      objectReference: {fileID: 0}
     - target: {fileID: 582501151776040218, guid: 080f101632cfe744d932dfa1df6c526b, type: 3}
       propertyPath: m_Name
       value: NewGameButton
