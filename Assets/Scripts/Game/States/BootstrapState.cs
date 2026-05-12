@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Core.AssetManagement;
-using Core.Records;
 using Core.Services;
+using Core.Yandex.Services;
 using Data.Services;
 using Game.Services;
 using GameEvents;
@@ -60,17 +60,17 @@ namespace Game.States
 
         private void RegisterDependentServices()
         {
-            AllServices.Register<IRecordsService>(new RecordsService(AllServices.Get<IStaticDataService>()));
+            AllServices.Register<ILeaderboardService>(new YandexLeaderboardService(AllServices.Get<IStaticDataService>()));
             AllServices.Register<IPlayerDataService>(new PlayerDataService(AllServices.Get<IStaticDataService>()));
             AllServices.Register<IPlayerStatsService>(new PlayerStatsService(
-                AllServices.Get<IPlayerDataService>(), 
+                AllServices.Get<IPlayerDataService>(),
                 AllServices.Get<IGameEventsDispatcher>()));
             AllServices.Register<IUIFactoryService>(new UIFactoryService(
                 AllServices.Get<IAssets>(),
                 AllServices.Get<IStaticDataService>(),
                 AllServices.Get<IGameEventsDispatcher>(),
-                AllServices.Get<IPlayerStatsService>(), 
-                AllServices.Get<IRecordsService>()));
+                AllServices.Get<IPlayerStatsService>(),
+                AllServices.Get<ILeaderboardService>()));
             AllServices.Register<IWindowService>(new WindowService(AllServices.Get<IUIFactoryService>()));
             AllServices.Register<IGameActionService>(new GameActionService(
                 AllServices.Get<ISceneLoaderService>(),
