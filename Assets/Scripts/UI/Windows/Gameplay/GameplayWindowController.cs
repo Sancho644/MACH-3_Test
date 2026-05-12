@@ -3,7 +3,8 @@ using Core.Match3.Board;
 using Core.Match3.Board.GameEvents;
 using Core.Match3.GameEvents;
 using Core.Match3.Hint;
-using Core.Records;
+using Core.Match3.Input;
+using Core.Yandex.Services;
 using Data.Services;
 using GameEvents;
 using StaticData;
@@ -27,14 +28,14 @@ namespace UI.Windows.Gameplay
         private IUIFactoryService _uiFactoryService;
 
         public void Init(IStaticDataService staticDataService, IPlayerStatsService playerStatsService,
-            IGameEventsDispatcher gameEventsDispatcher, IUIFactoryService uiFactoryService, IRecordsService recordsService)
+            IGameEventsDispatcher gameEventsDispatcher, IUIFactoryService uiFactoryService, ILeaderboardService leaderboardService)
         {
             _uiFactoryService = uiFactoryService;
             _gameEventsDispatcher = gameEventsDispatcher;
 
             _gameEventsDispatcher.AddListener<OutOfMovesEvent>(OnOutOfMoves);
 
-            boardController.Initialize(staticDataService, playerStatsService, _gameEventsDispatcher, recordsService);
+            boardController.Initialize(staticDataService, playerStatsService, _gameEventsDispatcher, leaderboardService);
             hintController.Initialize(boardController, _gameEventsDispatcher, boardView);
             countersController.Initialize(_gameEventsDispatcher, playerStatsService);
             showMainMenuButton.Initialize(_uiFactoryService);

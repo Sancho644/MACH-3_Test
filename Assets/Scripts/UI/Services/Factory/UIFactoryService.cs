@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Core.AssetManagement;
-using Core.Records;
+using Core.Yandex.Services;
 using Data.Services;
 using GameEvents;
 using StaticData;
@@ -21,22 +21,22 @@ namespace UI.Services.Factory
         private const string GameCanvasPath = "GameCanvas";
 
         private readonly IAssets _assets;
-        private readonly IRecordsService _recordsService;
         private readonly IStaticDataService _staticDataService;
         private readonly IPlayerStatsService _playerStatsService;
+        private readonly ILeaderboardService _leaderboardService;
         private readonly IGameEventsDispatcher _gameEventsDispatcher;
 
         private Transform _uiRoot;
 
         public UIFactoryService(IAssets assets, IStaticDataService staticDataService,
             IGameEventsDispatcher gameEventsDispatcher, IPlayerStatsService playerStatsService,
-            IRecordsService recordsService)
+            ILeaderboardService leaderboardService)
         {
             _assets = assets;
             _staticDataService = staticDataService;
             _gameEventsDispatcher = gameEventsDispatcher;
             _playerStatsService = playerStatsService;
-            _recordsService = recordsService;
+            _leaderboardService = leaderboardService;
         }
 
         public void CreateMainMenuWindow()
@@ -56,7 +56,7 @@ namespace UI.Services.Factory
             if (gameplayWindow != null)
             {
                 gameplayWindow.Init(_staticDataService, _playerStatsService, _gameEventsDispatcher, this,
-                    _recordsService);
+                    _leaderboardService);
             }
         }
 
@@ -86,7 +86,7 @@ namespace UI.Services.Factory
             var recordsWindow = Object.Instantiate(windowConfig.Prefab, _uiRoot) as RecordsWindow;
             if (recordsWindow != null)
             {
-                recordsWindow.Init(_recordsService, _gameEventsDispatcher);
+                recordsWindow.Init(_gameEventsDispatcher, _leaderboardService);
             }
         }
 

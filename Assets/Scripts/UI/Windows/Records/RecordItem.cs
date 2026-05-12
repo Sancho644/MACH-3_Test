@@ -1,4 +1,4 @@
-﻿using Core.Records;
+﻿using Core.Yandex.Services;
 using TMPro;
 using UnityEngine;
 
@@ -8,17 +8,11 @@ namespace UI.Windows.Records
     {
         [SerializeField] private TextMeshProUGUI date;
         [SerializeField] private TextMeshProUGUI points;
-        [SerializeField] private float newRecordFontSize = 35f;
 
         public void Setup(RecordEntry entry)
         {
-            date.text = entry.Date.ToString("dd/MM/yyyy");
-            points.text = entry.Score.ToString();
-            if (entry.NewRecord)
-            {
-                date.fontSizeMax = newRecordFontSize;
-                points.fontSizeMax = newRecordFontSize;
-            }
+            date.text = entry.name;
+            points.text = entry.score.ToString();
         }
     }
 }

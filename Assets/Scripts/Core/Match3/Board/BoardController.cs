@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Core.Match3.GameEvents;
 using Core.Match3.Hint;
-using Core.Records;
+using Core.Yandex.Services;
 using Data.Services;
 using DG.Tweening;
 using Game.Services.GameEvents;
@@ -20,27 +20,27 @@ namespace Core.Match3.Board
         [SerializeField] private int spawnYOffset = 2;
 
         private IGameEventsDispatcher _gameEventsDispatcher;
+        private ILeaderboardService _leaderboardService;
         private IPlayerStatsService _playerStatsService;
         private IStaticDataService _staticDataService;
-        private IRecordsService _recordsService;
         private BoardStaticData _staticData;
 
         private readonly MoveValidator _moveValidator = new();
         private readonly BoardResolver _resolver = new();
 
         private int _movesRemaining;
+        private BoardModel Model { get; set; }
 
-        public BoardModel Model { get; private set; }
         public bool IsBusy { get; private set; }
         public bool HasMoves => _movesRemaining > 0;
 
         public void Initialize(IStaticDataService staticDataService, IPlayerStatsService playerStatsService,
-            IGameEventsDispatcher gameEventsDispatcher, IRecordsService recordsService)
+            IGameEventsDispatcher gameEventsDispatcher, ILeaderboardService leaderboardService)
         {
             _staticDataService = staticDataService;
             _playerStatsService = playerStatsService;
             _gameEventsDispatcher = gameEventsDispatcher;
-            _recordsService = recordsService;
+            _leaderboardService = leaderboardService;
 
             _staticData = _staticDataService.GetBoardConfig();
 
@@ -98,12 +98,12 @@ namespace Core.Match3.Board
         public bool TryFindBestMatchMove(out MoveHint hint)
         {
             hint = default;
-            
+
             if (Model == null)
             {
                 return false;
             }
-           
+
             return _moveValidator.TryFindBestMatchMove(Model, out hint);
         }
 
@@ -164,13 +164,20 @@ namespace Core.Match3.Board
                 return;
             }
 
-            var isRecordScore = _recordsService.TryAddRecord(_playerStatsService.Score);
-            if (_movesRemaining <= 0 && isRecordScore)
+            _leaderboardService.LoadTop(OnLoaded);
+          
+        }
+
+        private void OnLoaded(List<RecordEntry> recordEntries)
+        {
+            var isEnoughScore = _leaderboardService.IsEnoughScore(_playerStatsService.Score, recordEntries);
+            if (_movesRemaining <= 0 && isEnoughScore)
             {
+                _leaderboardService.WriteScore(_playerStatsService.Score);
                 _gameEventsDispatcher.Dispatch(new GameActionEvent(GameActionType.Records));
             }
 
-            if (_movesRemaining <= 0 && !isRecordScore)
+            if (_movesRemaining <= 0 && !isEnoughScore)
             {
                 _gameEventsDispatcher.Dispatch(new OutOfMovesEvent());
             }

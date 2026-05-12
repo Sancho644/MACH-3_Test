@@ -1,4 +1,5 @@
-﻿using Core.Records;
+﻿using System.Collections.Generic;
+using Core.Yandex.Services;
 using GameEvents;
 using UnityEngine;
 
@@ -10,11 +11,11 @@ namespace UI.Windows.Records
         [SerializeField] private RecordItem recordItemPrefab;
         [SerializeField] private GoMainMenuButton goMainMenuButton;
 
-        private IRecordsService _recordsService;
+        private ILeaderboardService _leaderboardService;
 
-        public void Init(IRecordsService recordsService, IGameEventsDispatcher gameEventsDispatcher)
+        public void Init(IGameEventsDispatcher gameEventsDispatcher , ILeaderboardService  leaderboardService)
         {
-            _recordsService = recordsService;
+            _leaderboardService = leaderboardService;
             
             goMainMenuButton.Initialize(gameEventsDispatcher);
             
@@ -23,19 +24,21 @@ namespace UI.Windows.Records
 
         private void Refresh()
         {
-            var records = _recordsService.Records;
+            _leaderboardService.LoadTop(OnLoaded);
+        }
+
+        private void OnLoaded(List<RecordEntry> recordEntries)
+        {
             foreach (Transform child in recordsRoot.transform)
             {
                 Destroy(child.gameObject);
             }
             
-            foreach (var entry in records)
+            foreach (var entry in recordEntries)
             {
                 var recordItem = Instantiate(recordItemPrefab, recordsRoot);
                 recordItem.Setup(entry);
             }
-
-            _recordsService.ResetRecordsStatus();
         }
     }
 }
