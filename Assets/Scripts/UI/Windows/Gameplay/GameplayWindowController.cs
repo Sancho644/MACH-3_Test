@@ -1,5 +1,4 @@
-﻿using Core.Match3;
-using Core.Match3.Board;
+﻿using Core.Match3.Board;
 using Core.Match3.Board.GameEvents;
 using Core.Match3.GameEvents;
 using Core.Match3.Hint;

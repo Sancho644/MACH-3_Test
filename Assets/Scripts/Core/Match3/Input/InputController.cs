@@ -1,11 +1,12 @@
 using Core.Match3.Board;
 using Core.Match3.GameEvents;
 using Core.Match3.Gem;
+using Core.Match3.Input.GameEvents;
 using DG.Tweening;
 using GameEvents;
 using UnityEngine;
 
-namespace Core.Match3
+namespace Core.Match3.Input
 {
     [RequireComponent(typeof(BoardController), typeof(BoardView))]
     public class InputController : MonoBehaviour
@@ -21,9 +22,8 @@ namespace Core.Match3
         [SerializeField] private BoardView boardView;
         [SerializeField] private BoardController boardController;
 
-        [Header("Animations")] [SerializeField]
-        private float dragStartThreshold = 0.2f;
-
+        [Header("Animations")] 
+        [SerializeField] private float dragStartThreshold = 0.2f;
         [SerializeField] private float dragFollowSpeed = 25f;
         [SerializeField] private float swapAnimationDuration = 0.2f;
         [SerializeField] private float snapBackDuration = 0.12f;
@@ -93,17 +93,17 @@ namespace Core.Match3
             if (_isSnapping || boardController.IsBusy)
                 return;
 
-            if (Input.GetMouseButtonDown(0))
+            if (UnityEngine.Input.GetMouseButtonDown(0))
             {
                 TrySetupPickGem();
             }
 
-            if (Input.GetMouseButton(0) && _pressedCell != null && _dragView != null)
+            if (UnityEngine.Input.GetMouseButton(0) && _pressedCell != null && _dragView != null)
             {
                 TryDragGem();
             }
 
-            if (Input.GetMouseButtonUp(0) && _pressedCell != null)
+            if (UnityEngine.Input.GetMouseButtonUp(0) && _pressedCell != null)
             {
                 var first = _pressedCell.Value;
                 if (!TryGetPointerWorld(out Vector3 world))
@@ -272,7 +272,7 @@ namespace Core.Match3
             {
                 if (RectTransformUtility.ScreenPointToWorldPointInRectangle(
                         _boardRect,
-                        Input.mousePosition,
+                        UnityEngine.Input.mousePosition,
                         _uiCamera,
                         out world))
                 {
@@ -287,7 +287,7 @@ namespace Core.Match3
                 return false;
             }
 
-            world = worldCamera.ScreenToWorldPoint(Input.mousePosition);
+            world = worldCamera.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
             world.z = 0f;
             return true;
         }
