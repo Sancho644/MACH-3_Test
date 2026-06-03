@@ -23,7 +23,9 @@ namespace Data.Services
             if (amount <= 0)
                 return;
 
-            _playerDataService.Data.Score += amount;
+            var absAmount = Mathf.Abs(amount);
+
+            _playerDataService.Data.Score += absAmount;
             _gameEventsDispatcher.Dispatch(new PlayerStatsChangedEvent());
         }
 
@@ -32,7 +34,9 @@ namespace Data.Services
             if (amount <= 0)
                 return;
 
-            _playerDataService.Data.Moves += amount;
+            var absAmount = Mathf.Abs(amount);
+
+            _playerDataService.Data.Moves += absAmount;
             _gameEventsDispatcher.Dispatch(new PlayerStatsChangedEvent());
         }
 

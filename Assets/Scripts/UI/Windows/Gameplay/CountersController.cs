@@ -3,6 +3,7 @@ using Data.Services;
 using GameEvents;
 using TMPro;
 using UnityEngine;
+using Utils;
 
 namespace UI.Windows.Gameplay
 {
@@ -31,11 +32,11 @@ namespace UI.Windows.Gameplay
 
         private void Refresh()
         {
-            var score = _playerStatsService.Score.ToString();
-            var moves = _playerStatsService.Moves.ToString();
+            var formattedScore = NumberFormatter.Format(_playerStatsService.Score);
+            var formattedMoves = NumberFormatter.Format(_playerStatsService.Moves);
 
-            scoreText.text = score;
-            movesText.text = moves;
+            scoreText.text = formattedScore;
+            movesText.text = formattedMoves;
         }
 
         private void OnPlayerStatsChanged(PlayerStatsChangedEvent @event)
