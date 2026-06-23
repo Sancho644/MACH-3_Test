@@ -11,7 +11,7 @@
     "modules": [
         {
             "name": "PluginYG2",
-            "version": "2.0091",
+            "version": "2.0092",
             "download": "https://max-games.ru/public/pluginYG2/other/PluginYG2.unitypackage",
             "doc": "https://max-games.ru/plugin-yg/doc/"
         },
@@ -168,7 +168,7 @@
         },
         {
             "name": "YandexMobileAds",
-            "version": "1.0",
+            "version": "1.1",
             "download": "https://boosty.to/maximalist/posts/eb519b99-798b-4fcb-8cc6-0445ad171c85",
             "noLoad": true,
             "doc": "https://max-games.ru/plugin-yg/doc/Yandex-Mobile-Ads/",
